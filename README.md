@@ -2,7 +2,7 @@
 
 A self-study roadmap for AI and machine learning, curated by **signal-to-time ratio** instead of completionism. Track your progress through courses, books, and platforms — all saved locally in your browser.
 
-🔗 **[Live Demo](https://lakshay-lg.github.io/ai-ml-roadmap/)**
+🔗 **[Live Demo](http://roadmap.lakshay.systems/)**
 
 ---
 
