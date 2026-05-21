@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Prerequisites — A Beginner's Study Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+  --black:#0A0A0A;
+  --white:#F2EFE8;
+  --gray:#1A1A1A;
+  --mid:#2E2E2E;
+  --dim:#555;
+  --border:rgba(242,239,232,0.12);
+  --border-bright:rgba(242,239,232,0.35);
+
+  --t1:#C8F542;   /* lime */
+  --t2:#FF6B35;   /* orange */
+  --t3:#4FC3F7;   /* sky */
+  --t4:#B39DDB;   /* lavender */
+  --t5:#F48FB1;   /* pink */
+  --t6:#FFD54F;   /* amber */
+}
+
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Space Grotesk',sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* PROGRESS */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--t1);z-index:200;width:0%;transition:width .08s linear}
+
+/* SCANLINE overlay */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ── HEADER ── */
+header{
+  border-bottom:3px solid var(--white);
+  padding:0;
+  position:relative;
+}
+
+.header-top{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:stretch;
+  border-bottom:1px solid var(--border-bright);
+}
+
+.header-stamp{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--black);
+  background:var(--t1);
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+}
+
+.header-meta{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:var(--dim);
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  border-left:1px solid var(--border-bright);
+}
+
+.header-body{
+  padding:48px 48px 40px;
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:48px;
+  align-items:end;
+}
+
+h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(72px,10vw,140px);
+  line-height:.92;
+  letter-spacing:.02em;
+  color:var(--white);
+}
+
+h1 span{color:var(--t1);}
+
+.header-right{
+  padding-bottom:4px;
+}
+
+.header-desc{
+  font-size:14px;
+  color:rgba(242,239,232,.6);
+  line-height:1.75;
+  font-weight:300;
+  margin-bottom:20px;
+}
+
+.origin-tag{
+  display:inline-block;
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--t1);
+  border:1px solid var(--t1);
+  padding:6px 12px;
+  margin-bottom:10px;
+}
+
+.origin-body{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:var(--dim);
+  line-height:1.7;
+  border-left:2px solid var(--mid);
+  padding-left:14px;
+  margin-bottom:20px;
+}
+
+/* Legend strips */
+.legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0;
+  border:1px solid var(--border-bright);
+}
+
+.leg{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:7px 12px;
+  border-right:1px solid var(--border-bright);
+  flex:1;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.leg:last-child{border-right:none;}
+.leg.t1{color:var(--t1)}.leg.t2{color:var(--t2)}.leg.t3{color:var(--t3)}.leg.t4{color:var(--t4)}.leg.t5{color:var(--t5)}.leg.t6{color:var(--t6)}
+
+/* ── MAIN ── */
+main{
+  display:grid;
+  grid-template-columns:56px 1fr;
+}
+
+/* Sidebar numbers */
+.sidebar{
+  border-right:1px solid var(--border-bright);
+  display:flex;
+  flex-direction:column;
+}
+
+.sb-cell{
+  border-bottom:1px solid var(--border);
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  writing-mode:vertical-rl;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:11px;
+  letter-spacing:.2em;
+  color:var(--dim);
+  padding:16px 0;
+  min-height:120px;
+}
+
+/* Content column */
+.content{display:flex;flex-direction:column;}
+
+/* ── TIER ── */
+.tier{
+  border-bottom:1px solid var(--border-bright);
+  opacity:0;
+  transform:translateX(-10px);
+  animation:slideIn .4s forwards;
+}
+
+@keyframes slideIn{to{opacity:1;transform:translateX(0)}}
+
+.tier:nth-child(1){animation-delay:.05s}
+.tier:nth-child(2){animation-delay:.15s}
+.tier:nth-child(3){animation-delay:.25s}
+.tier:nth-child(4){animation-delay:.35s}
+.tier:nth-child(5){animation-delay:.42s}
+.tier:nth-child(6){animation-delay:.48s}
+.tier:nth-child(7){animation-delay:.53s}
+
+.tier-header{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:0;
+  border-bottom:1px solid var(--border);
+  padding:0;
+}
+
+.tier-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  padding:8px 20px;
+  border-right:1px solid var(--border);
+  line-height:1;
+}
+
+.tier-title{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--dim);
+  padding:0 20px;
+}
+
+.tier-count{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  color:var(--dim);
+  border-left:1px solid var(--border);
+  padding:0 16px;
+  height:100%;
+  display:flex;
+  align-items:center;
+  letter-spacing:.1em;
+}
+
+/* CARDS GRID */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border-bottom:0;
+}
+
+.card{
+  border-right:1px solid var(--border);
+  padding:20px;
+  cursor:pointer;
+  transition:background .12s;
+  position:relative;
+  overflow:hidden;
+}
+
+.card:last-child{border-right:none}
+
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .2s;
+}
+
+.card:hover::before,.card.open::before{transform:scaleX(1)}
+
+.card:hover{background:var(--gray)}
+.card.open{background:var(--gray)}
+
+.card.t1{color:var(--t1)}.card.t2{color:var(--t2)}.card.t3{color:var(--t3)}
+.card.t4{color:var(--t4)}.card.t5{color:var(--t5)}.card.t6{color:var(--t6)}
+
+.card-num{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  color:var(--dim);
+  letter-spacing:.1em;
+  margin-bottom:10px;
+}
+
+.card-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:15px;
+  font-weight:700;
+  color:currentColor;
+  line-height:1.25;
+  margin-bottom:6px;
+}
+
+.card-sub{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:var(--dim);
+  line-height:1.5;
+}
+
+.card-arrow{
+  position:absolute;
+  bottom:14px;
+  right:14px;
+  font-size:16px;
+  opacity:0;
+  transition:opacity .15s,transform .15s;
+  transform:translate(-3px,3px);
+}
+
+.card:hover .card-arrow{opacity:1;transform:translate(0,0)}
+.card.open .card-arrow{opacity:0}
+
+/* PANEL */
+.panel{
+  display:none;
+  border-top:1px solid var(--border-bright);
+  background:var(--gray);
+}
+
+.panel.show{display:block;animation:panelIn .18s ease}
+
+@keyframes panelIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.panel-left{
+  padding:28px 32px;
+  border-right:1px solid var(--border);
+}
+
+.panel-right{
+  padding:28px 32px;
+  background:var(--black);
+}
+
+.panel-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+
+.panel-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;
+  line-height:1;
+  color:var(--white);
+  margin-bottom:16px;
+  letter-spacing:.03em;
+}
+
+.panel-text{
+  font-size:13px;
+  color:rgba(242,239,232,.65);
+  line-height:1.8;
+  font-weight:300;
+}
+
+.res-heading{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:14px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+
+.res-list{list-style:none;display:flex;flex-direction:column;gap:1px}
+
+.res-list a{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  text-decoration:none;
+  color:rgba(242,239,232,.5);
+  font-size:12px;
+  line-height:1.45;
+  padding:9px 10px;
+  border:1px solid transparent;
+  transition:all .12s;
+  font-family:'Space Mono',monospace;
+}
+
+.res-list a:hover{
+  color:var(--white);
+  border-color:var(--border-bright);
+  background:var(--gray);
+}
+
+.res-arr{opacity:.3;flex-shrink:0;margin-top:1px}
+
+/* CONNECTOR */
+.connector{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 20px;
+  height:36px;
+  background:var(--black);
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+
+.connector::before{
+  content:'↓';
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:var(--dim);
+  letter-spacing:.1em;
+}
+
+.connector-line{
+  position:absolute;
+  left:50%;
+  top:0;
+  width:1px;
+  height:100%;
+  background:var(--border-bright);
+  transform:translateX(-50%);
+}
+
+/* DESTINATION */
+.destination{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.cs-card{
+  padding:32px;
+  border-right:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+
+.cs-card:last-child{border-right:none}
+
+.cs-bg-num{
+  position:absolute;
+  bottom:-20px;
+  right:16px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:160px;
+  color:rgba(255,255,255,.03);
+  line-height:1;
+  pointer-events:none;
+  user-select:none;
+}
+
+.cs-eyebrow{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--t6);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.cs-eyebrow::before{
+  content:'';
+  width:24px;height:1px;
+  background:var(--t6);
+}
+
+.cs-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;
+  color:var(--white);
+  line-height:1.1;
+  letter-spacing:.04em;
+  margin-bottom:12px;
+}
+
+.cs-desc{
+  font-size:12px;
+  color:var(--dim);
+  line-height:1.7;
+  font-family:'Space Mono',monospace;
+}
+
+/* FOOTER */
+footer{
+  border-top:3px solid var(--white);
+  padding:24px 48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.footer-left{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:var(--dim);
+  letter-spacing:.1em;
+  line-height:1.8;
+}
+
+.footer-right{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;
+  letter-spacing:.2em;
+  color:var(--dim);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .header-body{grid-template-columns:1fr;gap:24px}
+  h1{font-size:80px}
+  main{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .destination{grid-template-columns:1fr}
+  .cs-card:first-child{border-right:none;border-bottom:1px solid var(--border)}
+}
+
+@media(max-width:600px){
+  header{padding:0}
+  .header-body{padding:32px 20px 28px}
+  .header-top{grid-template-columns:1fr}
+  .header-meta{display:none}
+  h1{font-size:56px}
+  .cards{grid-template-columns:1fr}
+  .panel-inner{grid-template-columns:1fr}
+  .panel-left{border-right:none;border-bottom:1px solid var(--border)}
+  footer{padding:20px}
+  .footer-right{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<header>
+  <div class="header-top">
+    <div class="header-stamp">ML PREREQS — A MISTAKE-GUIDED JOURNEY</div>
+    <div class="header-meta">
+      <span>6 TIERS</span>
+      <span>24 CONCEPTS</span>
+      <span>FREE RESOURCES</span>
+      <span>OPEN FOR EVERYONE</span>
+    </div>
+  </div>
+  <div class="header-body">
+    <div>
+      <h1>THE<br>CONCEPTS<br>I WISH I<br><span>KNEW</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="origin-tag">Origin story</div>
+      <p class="origin-body">I tried to understand production ML systems as a beginner and kept hitting walls — not because the ideas are hard, but because nobody laid out the prerequisites in order. This is that map.</p>
+      <p class="header-desc">Learn top to bottom. Click any card to understand the concept and find the best free resources. No company promoted. No course sponsored.</p>
+      <div class="legend">
+        <div class="leg t1">01 Basics</div>
+        <div class="leg t2">02 ML core</div>
+        <div class="leg t3">03 NLP</div>
+        <div class="leg t4">04 Applied</div>
+        <div class="leg t5">05 Systems</div>
+        <div class="leg t6">06 Advanced</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="sidebar">
+    <div class="sb-cell" style="color:var(--t1)">BASICS</div>
+    <div class="sb-cell" style="color:var(--t2)">ML CORE</div>
+    <div class="sb-cell" style="color:var(--t3)">NLP</div>
+    <div class="sb-cell" style="color:var(--t4)">APPLIED</div>
+    <div class="sb-cell" style="color:var(--t5)">SYSTEMS</div>
+    <div class="sb-cell" style="color:var(--t6)">ADVANCED</div>
+    <div class="sb-cell" style="color:var(--dim)">DEST.</div>
+  </div>
+
+  <div class="content">
+
+    <!-- TIER 1 -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--t1)">01</div>
+        <div class="tier-title">Absolute basics — start here</div>
+        <div class="tier-count">4 concepts</div>
+      </div>
+      <div class="cards">
+
+        <div class="card t1" onclick="toggle(this,'p-t1a')">
+          <div class="card-num">01.01</div>
+          <div class="card-title">Basic Python</div>
+          <div class="card-sub">loops · dicts · functions</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t1" onclick="toggle(this,'p-t1b')">
+          <div class="card-num">01.02</div>
+          <div class="card-title">Basic statistics</div>
+          <div class="card-sub">mean · probability · distributions</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t1" onclick="toggle(this,'p-t1c')">
+          <div class="card-num">01.03</div>
+          <div class="card-title">What is a model</div>
+          <div class="card-sub">input → function → output</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t1" onclick="toggle(this,'p-t1d')">
+          <div class="card-num">01.04</div>
+          <div class="card-title">Training data</div>
+          <div class="card-sub">examples + labels</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+      </div>
+      <div class="panel" id="p-t1a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t1)">01.01 — Basic Python</div><div class="panel-name">Basic Python</div><p class="panel-text">You need Python to run ML code. The key things: loops (repeat tasks over a list of documents), dictionaries (store mappings like label → index), and functions (reusable blocks of logic). You don't need to be an expert — just comfortable reading and writing scripts. Almost every ML library is Python-first, so this is the entry point for everything else.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://cs50.harvard.edu/python/" target="_blank"><span class="res-arr">→</span>CS50P — Python for beginners (Harvard, free)</a></li><li><a href="https://www.kaggle.com/learn/python" target="_blank"><span class="res-arr">→</span>Kaggle Python course — hands-on, free</a></li><li><a href="https://automatetheboringstuff.com/" target="_blank"><span class="res-arr">→</span>Automate the Boring Stuff — very practical, free online</a></li></ul></div></div></div>
+      <div class="panel" id="p-t1b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t1)">01.02 — Basic statistics</div><div class="panel-name">Basic Statistics</div><p class="panel-text">Statistics is the language of measuring model quality. You need: mean (average score across a dataset), probability (likelihood that something belongs to a class), and distributions (how values spread). Nothing beyond high school maths is needed. The confusion comes later when people throw terms like PSI and KL divergence around — but those just describe how distributions shift over time.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.khanacademy.org/math/statistics-probability" target="_blank"><span class="res-arr">→</span>Khan Academy — Statistics and Probability</a></li><li><a href="https://seeing-theory.brown.edu/" target="_blank"><span class="res-arr">→</span>Seeing Theory — visual, interactive probability</a></li><li><a href="https://www.statlearning.com/" target="_blank"><span class="res-arr">→</span>Intro to Statistical Learning — free PDF + videos</a></li></ul></div></div></div>
+      <div class="panel" id="p-t1c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t1)">01.03 — What is a model</div><div class="panel-name">What Is A Model</div><p class="panel-text">A model is a function. You put something in — a document, an image, a sentence — it processes it, and gives you an output: a label, a number, a prediction. The "learning" part means the function adjusts its internal settings based on thousands of examples you show it, until it gets consistently good. That is literally all training is. The math behind how the settings adjust is calculus, but you don't need to know that to understand what's happening.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank"><span class="res-arr">→</span>3Blue1Brown — What is a neural network?</a></li><li><a href="https://developers.google.com/machine-learning/crash-course" target="_blank"><span class="res-arr">→</span>Google ML Crash Course — free, well structured</a></li></ul></div></div></div>
+      <div class="panel" id="p-t1d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t1)">01.04 — Training data</div><div class="panel-name">Training Data</div><p class="panel-text">A model learns from examples. Each example has an input (a document) and a label (the correct answer). The more high-quality examples, the better the model. Bad or missing data is why most real-world ML projects fail — not the model architecture. The smartest model trained on bad data loses to a simple model trained on good data. Every time.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://developers.google.com/machine-learning/data-prep" target="_blank"><span class="res-arr">→</span>Google — Data preparation guide</a></li><li><a href="https://huggingface.co/learn/nlp-course/chapter5/1" target="_blank"><span class="res-arr">→</span>HuggingFace — Working with datasets</a></li></ul></div></div></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- TIER 2 -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--t2)">02</div>
+        <div class="tier-title">ML core concepts</div>
+        <div class="tier-count">4 concepts</div>
+      </div>
+      <div class="cards">
+
+        <div class="card t2" onclick="toggle(this,'p-t2a')">
+          <div class="card-num">02.01</div>
+          <div class="card-title">Precision / Recall / F1</div>
+          <div class="card-sub">measuring model quality</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t2" onclick="toggle(this,'p-t2b')">
+          <div class="card-num">02.02</div>
+          <div class="card-title">Loss function</div>
+          <div class="card-sub">how wrong am I?</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t2" onclick="toggle(this,'p-t2c')">
+          <div class="card-num">02.03</div>
+          <div class="card-title">Train / test split</div>
+          <div class="card-sub">overfitting · eval sets</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t2" onclick="toggle(this,'p-t2d')">
+          <div class="card-num">02.04</div>
+          <div class="card-title">Classification</div>
+          <div class="card-sub">pick 1 of N labels</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+      </div>
+      <div class="panel" id="p-t2a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t2)">02.01 — Precision / Recall / F1</div><div class="panel-name">Precision Recall F1</div><p class="panel-text">Two things can go wrong: you miss real things (low recall) or you flag things that aren't real (low precision). Precision = of everything I flagged, how much was correct? Recall = of everything that should have been flagged, how much did I catch? F1 = one number balancing both. Score of 1.0 is perfect, 0.0 is useless. I encountered this trying to understand why a model could look "good" overall but still fail badly in specific areas.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.youtube.com/watch?v=jJ7ff7Gcleo" target="_blank"><span class="res-arr">→</span>StatQuest — Precision and Recall clearly explained</a></li><li><a href="https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall" target="_blank"><span class="res-arr">→</span>Google ML Course — Precision and Recall</a></li></ul></div></div></div>
+      <div class="panel" id="p-t2b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t2)">02.02 — Loss function</div><div class="panel-name">Loss Function</div><p class="panel-text">During training the model makes a guess. The loss function measures how wrong it was — a single number. High loss = bad guess, low loss = good guess. Training is: make a guess → measure loss → adjust settings slightly → repeat millions of times until loss is small. Understanding loss is the key to understanding why models train the way they do and why certain design choices (like separate losses for hierarchy levels) matter.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html" target="_blank"><span class="res-arr">→</span>ML Cheatsheet — Loss functions explained</a></li><li><a href="https://www.youtube.com/watch?v=Skc8nqJirJg" target="_blank"><span class="res-arr">→</span>StatQuest — Cross Entropy Loss (YouTube)</a></li></ul></div></div></div>
+      <div class="panel" id="p-t2c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t2)">02.03 — Train / test split</div><div class="panel-name">Train Test Split</div><p class="panel-text">Always hold back some data the model never trains on — the test set. Use it to check if the model learned general patterns, or just memorised the training data (overfitting). Golden rule: never let training data touch the test set. This sounds obvious but in real systems with large datasets it's surprisingly easy to violate, and when you do, every metric you report is a lie.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.youtube.com/watch?v=fSytzGwwBVw" target="_blank"><span class="res-arr">→</span>StatQuest — Train, test, validation sets</a></li><li><a href="https://developers.google.com/machine-learning/crash-course/training-and-test-sets/splitting-data" target="_blank"><span class="res-arr">→</span>Google ML Course — Splitting data</a></li></ul></div></div></div>
+      <div class="panel" id="p-t2d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t2)">02.04 — Classification</div><div class="panel-name">Classification</div><p class="panel-text">Given an input, pick the right label from a fixed list. Email spam/not-spam is binary (2 options). Document typing with 50 types is multi-class. The model outputs a score for each label and picks the highest. The interesting challenge is when two labels look nearly identical to the model — this is where hierarchy, better training data, and post-processing rules come in.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://developers.google.com/machine-learning/crash-course/classification" target="_blank"><span class="res-arr">→</span>Google ML Course — Classification</a></li><li><a href="https://scikit-learn.org/stable/modules/multiclass.html" target="_blank"><span class="res-arr">→</span>Scikit-learn — Multi-class classification</a></li></ul></div></div></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- TIER 3 -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--t3)">03</div>
+        <div class="tier-title">NLP and model architecture</div>
+        <div class="tier-count">4 concepts</div>
+      </div>
+      <div class="cards">
+
+        <div class="card t3" onclick="toggle(this,'p-t3a')">
+          <div class="card-num">03.01</div>
+          <div class="card-title">What is NLP</div>
+          <div class="card-sub">computers reading text</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t3" onclick="toggle(this,'p-t3b')">
+          <div class="card-num">03.02</div>
+          <div class="card-title">Tokenization</div>
+          <div class="card-sub">text → numbers</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t3" onclick="toggle(this,'p-t3c')">
+          <div class="card-num">03.03</div>
+          <div class="card-title">Embeddings</div>
+          <div class="card-sub">words → meaningful vectors</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t3" onclick="toggle(this,'p-t3d')">
+          <div class="card-num">03.04</div>
+          <div class="card-title">Transformers</div>
+          <div class="card-sub">BERT · layers · attention</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+      </div>
+      <div class="panel" id="p-t3a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t3)">03.01 — What is NLP</div><div class="panel-name">What Is NLP</div><p class="panel-text">Natural Language Processing is the field of making computers understand human text. It covers finding names in documents (NER), translating languages, summarising text, and generating responses. If your ML task involves text as input — classifying it, extracting things from it — you're doing NLP. Almost all document AI falls under this umbrella.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://huggingface.co/learn/nlp-course/chapter1/1" target="_blank"><span class="res-arr">→</span>HuggingFace NLP Course — Chapter 1</a></li><li><a href="https://lena-voita.github.io/nlp_course.html" target="_blank"><span class="res-arr">→</span>Lena Voita's NLP Course — beautifully written</a></li></ul></div></div></div>
+      <div class="panel" id="p-t3b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t3)">03.02 — Tokenization</div><div class="panel-name">Tokenization</div><p class="panel-text">Models can't read raw text — they only understand numbers. Tokenization breaks text into chunks (tokens) and converts each to a number ID. "The quick brown fox" becomes something like [464, 2068, 7586, 21831]. The model processes these numbers, not the original words. One practical consequence: models have a maximum token limit, so long documents get truncated — understanding this matters when designing any text-based classifier.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://huggingface.co/learn/nlp-course/chapter2/4" target="_blank"><span class="res-arr">→</span>HuggingFace — Tokenizers explained</a></li><li><a href="https://tiktokenizer.vercel.app/" target="_blank"><span class="res-arr">→</span>Tiktokenizer — see tokenization happen live</a></li></ul></div></div></div>
+      <div class="panel" id="p-t3c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t3)">03.03 — Embeddings</div><div class="panel-name">Embeddings</div><p class="panel-text">An embedding converts a word — or sentence, or entire document — into a list of numbers where similar things end up with similar numbers. "Bank statement" and "financial document" would have close embeddings because they're related concepts. This is how models capture meaning. The CLS embedding from a transformer encodes the whole document in one vector, and that's what a classification head reads to make its prediction.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.youtube.com/watch?v=viZrOnJclY0" target="_blank"><span class="res-arr">→</span>3Blue1Brown — Word embeddings visually explained</a></li><li><a href="https://jalammar.github.io/illustrated-word2vec/" target="_blank"><span class="res-arr">→</span>Jay Alammar — Illustrated Word2Vec</a></li><li><a href="https://projector.tensorflow.org/" target="_blank"><span class="res-arr">→</span>TensorFlow Embedding Projector — visualize live</a></li></ul></div></div></div>
+      <div class="panel" id="p-t3d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t3)">03.04 — Transformers</div><div class="panel-name">Transformers</div><p class="panel-text">The dominant model architecture for text. A transformer reads the whole sentence at once and figures out how every word relates to every other word — this is the "attention" mechanism. BERT is a popular pre-trained transformer that produces a rich summary of any text you feed it. Models for document understanding typically start from a pre-trained transformer and fine-tune it on domain-specific data.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank"><span class="res-arr">→</span>Jay Alammar — The Illustrated Transformer</a></li><li><a href="https://www.youtube.com/watch?v=4Bdc55j80l8" target="_blank"><span class="res-arr">→</span>3Blue1Brown — Attention in transformers</a></li><li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank"><span class="res-arr">→</span>Jay Alammar — Illustrated BERT</a></li></ul></div></div></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- TIER 4 -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--t4)">04</div>
+        <div class="tier-title">Applied ML — where things get real</div>
+        <div class="tier-count">4 concepts</div>
+      </div>
+      <div class="cards">
+
+        <div class="card t4" onclick="toggle(this,'p-t4a')">
+          <div class="card-num">04.01</div>
+          <div class="card-title">NER</div>
+          <div class="card-sub">highlight entities in text</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t4" onclick="toggle(this,'p-t4b')">
+          <div class="card-num">04.02</div>
+          <div class="card-title">Multi-class classif.</div>
+          <div class="card-sub">pick 1 of N labels</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t4" onclick="toggle(this,'p-t4c')">
+          <div class="card-num">04.03</div>
+          <div class="card-title">Softmax</div>
+          <div class="card-sub">scores → probabilities</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t4" onclick="toggle(this,'p-t4d')">
+          <div class="card-num">04.04</div>
+          <div class="card-title">Confidence scores</div>
+          <div class="card-sub">how sure is the model?</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+      </div>
+      <div class="panel" id="p-t4a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t4)">04.01 — NER</div><div class="panel-name">Named Entity Recognition</div><p class="panel-text">Smart highlighting. Given a document, the model finds and labels specific spans of text — dates, names, amounts, ID numbers. The output is a list of (start position, end position, label) tuples. It's one of the most common NLP tasks in document processing because most real business documents contain structured facts buried in unstructured text, and extracting those facts automatically is extremely valuable.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://huggingface.co/learn/nlp-course/chapter7/2" target="_blank"><span class="res-arr">→</span>HuggingFace — Token classification and NER</a></li><li><a href="https://spacy.io/usage/linguistic-features#named-entities" target="_blank"><span class="res-arr">→</span>spaCy — NER in practice</a></li></ul></div></div></div>
+      <div class="panel" id="p-t4b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t4)">04.02 — Multi-class classification</div><div class="panel-name">Multi Class Classification</div><p class="panel-text">Document comes in, pick the best label from N options. Easy when N is small and classes are visually distinct. Hard when N is large and some classes look nearly identical. This is the problem that motivates hierarchical classification: instead of one hard N-way decision, make two easier decisions in sequence — first pick the family, then pick within the family.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://huggingface.co/learn/nlp-course/chapter3/1" target="_blank"><span class="res-arr">→</span>HuggingFace — Fine-tuning for classification</a></li><li><a href="https://developers.google.com/machine-learning/crash-course/multi-class-neural-networks/softmax" target="_blank"><span class="res-arr">→</span>Google ML Course — Multi-class and softmax</a></li></ul></div></div></div>
+      <div class="panel" id="p-t4c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t4)">04.03 — Softmax</div><div class="panel-name">Softmax</div><p class="panel-text">The final step in most classifiers. The model produces raw scores for each label (A: 4.2, B: 1.1, C: 0.3). Softmax converts these into probabilities that add up to 100% (A: 92%, B: 6%, C: 2%). The highest probability wins. Understanding softmax helps you understand confidence scores — a 92% vs 52% prediction feel completely different even if both technically chose the right label.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.youtube.com/watch?v=ytbYRIN0N4g" target="_blank"><span class="res-arr">→</span>StatQuest — Softmax explained simply</a></li><li><a href="https://cs231n.github.io/linear-classify/#softmax" target="_blank"><span class="res-arr">→</span>Stanford CS231n — Softmax classifier</a></li></ul></div></div></div>
+      <div class="panel" id="p-t4d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t4)">04.04 — Confidence scores</div><div class="panel-name">Confidence Scores</div><p class="panel-text">When a model outputs 99% for a label, it's very confident. When it outputs 52% vs 45%, it's basically guessing. These scores drive multiple mechanisms: early exit (skip computation if already confident), active learning (send uncertain predictions to humans), and calibration (making sure 90% confidence actually means correct 90% of the time — models are often miscalibrated out of the box).</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://scikit-learn.org/stable/modules/calibration.html" target="_blank"><span class="res-arr">→</span>Scikit-learn — Probability calibration</a></li><li><a href="https://www.youtube.com/watch?v=9G0z_sH2Lws" target="_blank"><span class="res-arr">→</span>StatQuest — Calibration and confidence</a></li></ul></div></div></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- TIER 5 -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--t5)">05</div>
+        <div class="tier-title">Systems and MLOps — production reality</div>
+        <div class="tier-count">4 concepts</div>
+      </div>
+      <div class="cards">
+
+        <div class="card t5" onclick="toggle(this,'p-t5a')">
+          <div class="card-num">05.01</div>
+          <div class="card-title">Data labelling</div>
+          <div class="card-sub">humans marking examples</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t5" onclick="toggle(this,'p-t5b')">
+          <div class="card-num">05.02</div>
+          <div class="card-title">Model serving</div>
+          <div class="card-sub">model in production</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t5" onclick="toggle(this,'p-t5c')">
+          <div class="card-num">05.03</div>
+          <div class="card-title">Latency / speed</div>
+          <div class="card-sub">p50 · p95 · p99</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t5" onclick="toggle(this,'p-t5d')">
+          <div class="card-num">05.04</div>
+          <div class="card-title">Regex and rules</div>
+          <div class="card-sub">pattern matching</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+      </div>
+      <div class="panel" id="p-t5a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t5)">05.01 — Data labelling</div><div class="panel-name">Data Labelling</div><p class="panel-text">Before a model can learn, someone has to create the training data — reading documents and tagging things manually. This is the most expensive and time-consuming part of real ML projects, and it scales terribly. With a small annotation team and many models to maintain, you quickly hit a wall. This bottleneck is what drives techniques like weak supervision and active learning.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://labelstud.io/blog/introduction-to-data-labeling/" target="_blank"><span class="res-arr">→</span>Label Studio — Introduction to data labelling</a></li><li><a href="https://www.snorkel.ai/blog/weak-supervision" target="_blank"><span class="res-arr">→</span>Snorkel — Why weak supervision matters</a></li></ul></div></div></div>
+      <div class="panel" id="p-t5b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t5)">05.02 — Model serving</div><div class="panel-name">Model Serving</div><p class="panel-text">Serving means making the model available to process real requests in real-time. You wrap it in an API — a document comes in, a prediction goes out. The challenges: speed (users expect fast responses), reliability (a crash is a business outage), and scale (hundreds of thousands of requests per day require efficient batching, caching, and model compression to stay affordable).</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://fastapi.tiangolo.com/" target="_blank"><span class="res-arr">→</span>FastAPI — serving ML models simply</a></li><li><a href="https://onnxruntime.ai/docs/" target="_blank"><span class="res-arr">→</span>ONNX Runtime — inference optimization</a></li></ul></div></div></div>
+      <div class="panel" id="p-t5c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t5)">05.03 — Latency</div><div class="panel-name">Latency P50 P95 P99</div><p class="panel-text">Latency = how long a prediction takes. p50 = median (half of requests are faster than this). p99 = 99th percentile (only 1% of requests take longer). You care about p99 because that's your worst-case user. In systems processing millions of documents, 1% is still a lot of unhappy moments. Early exit architectures bring down p50 for easy inputs while keeping p99 acceptable for the hard ones.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://bravenewgeek.com/everything-you-know-about-latency-is-wrong/" target="_blank"><span class="res-arr">→</span>Everything you know about latency is wrong</a></li><li><a href="https://www.youtube.com/watch?v=At7pTFIFTsQ" target="_blank"><span class="res-arr">→</span>Understanding percentile latency (YouTube)</a></li></ul></div></div></div>
+      <div class="panel" id="p-t5d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t5)">05.04 — Regex and rules</div><div class="panel-name">Regex And Rules</div><p class="panel-text">Regular expressions are patterns that match text. ID numbers, dates, currency amounts, and postal codes all follow fixed formats — one regex catches all of them with near-perfect accuracy. In production ML systems, rules often outperform learned models on structured patterns and are much cheaper to write and debug. The smart approach is to use rules where they're reliable and models where they're needed.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://regexone.com/" target="_blank"><span class="res-arr">→</span>RegexOne — interactive tutorial, free</a></li><li><a href="https://regex101.com/" target="_blank"><span class="res-arr">→</span>Regex101 — test and debug patterns live</a></li><li><a href="https://www.youtube.com/watch?v=sa-TUpSx1JA" target="_blank"><span class="res-arr">→</span>Regex in 20 minutes (YouTube)</a></li></ul></div></div></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- TIER 6 -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--t6)">06</div>
+        <div class="tier-title">Advanced topics — the hard stuff I had to look up</div>
+        <div class="tier-count">4 concepts</div>
+      </div>
+      <div class="cards">
+
+        <div class="card t6" onclick="toggle(this,'p-t6a')">
+          <div class="card-num">06.01</div>
+          <div class="card-title">Slice-based eval</div>
+          <div class="card-sub">F1 per subgroup</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t6" onclick="toggle(this,'p-t6b')">
+          <div class="card-num">06.02</div>
+          <div class="card-title">Active learning</div>
+          <div class="card-sub">label the hard ones first</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t6" onclick="toggle(this,'p-t6c')">
+          <div class="card-num">06.03</div>
+          <div class="card-title">Weak supervision</div>
+          <div class="card-sub">auto-labels via rules</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+        <div class="card t6" onclick="toggle(this,'p-t6d')">
+          <div class="card-num">06.04</div>
+          <div class="card-title">Drift detection</div>
+          <div class="card-sub">catching silent degradation</div>
+          <div class="card-arrow">↗</div>
+        </div>
+
+      </div>
+      <div class="panel" id="p-t6a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t6)">06.01 — Slice-based evaluation</div><div class="panel-name">Slice Based Evaluation</div><p class="panel-text">Instead of one overall F1 score, you break it down by subgroups — entity type, language, document source, confidence band. A model might score 85% overall but only 62% on a specific combination that matters a lot to your users. Slicing makes invisible failure visible. Aggregate metrics are almost always hiding something, and slicing is the only way to find it.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://snorkel.ai/slicing/" target="_blank"><span class="res-arr">→</span>Snorkel — slice-based evaluation guide</a></li><li><a href="https://arxiv.org/abs/1904.02232" target="_blank"><span class="res-arr">→</span>Slice-based learning — original paper (arXiv)</a></li></ul></div></div></div>
+      <div class="panel" id="p-t6b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t6)">06.02 — Active learning</div><div class="panel-name">Active Learning</div><p class="panel-text">Instead of randomly picking documents to label, pick the ones the model is most uncertain about. If the model is 51% vs 49% between two labels, that example is right on the decision boundary — labelling it teaches the model more than ten confident examples would. Combined with slice targeting, you can fix a specific failing subgroup with a fraction of the annotation effort random sampling would need.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.datacamp.com/blog/active-learning-machine-learning" target="_blank"><span class="res-arr">→</span>DataCamp — Active learning explained</a></li><li><a href="https://modal-python.readthedocs.io/en/latest/" target="_blank"><span class="res-arr">→</span>modAL — active learning library for Python</a></li></ul></div></div></div>
+      <div class="panel" id="p-t6c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t6)">06.03 — Weak supervision</div><div class="panel-name">Weak Supervision</div><p class="panel-text">Write rules that create labels automatically instead of humans doing it one by one. An ID number regex that fires on valid IDs gives you free labels — called "silver labels." The trick is combining multiple imperfect rules whose errors don't correlate, so you end up with reliable labels even when each individual rule makes mistakes. This is the core insight behind the Snorkel framework.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.snorkel.org/blog/snorkel-programming/" target="_blank"><span class="res-arr">→</span>Snorkel — weak supervision tutorial</a></li><li><a href="https://dawn.cs.stanford.edu/2017/05/08/snorkel/" target="_blank"><span class="res-arr">→</span>Stanford DAWN — intro to Snorkel</a></li><li><a href="https://www.youtube.com/watch?v=krPxaKmOtF0" target="_blank"><span class="res-arr">→</span>Weak supervision explained (YouTube)</a></li></ul></div></div></div>
+      <div class="panel" id="p-t6d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--t6)">06.04 — Drift detection</div><div class="panel-name">Drift Detection</div><p class="panel-text">Models trained on old data degrade silently as the world changes. Drift detection catches this automatically before users notice. Three complementary signals: input drift (are incoming documents different from training data?), prediction drift (is the model behaving differently day-to-day?), and label-function agreement (do your deterministic rules still match the model's outputs?). Each signal catches different failure modes.</p></div><div class="panel-right"><div class="res-heading">Free resources</div><ul class="res-list"><li><a href="https://www.evidentlyai.com/blog/machine-learning-monitoring-data-and-concept-drift" target="_blank"><span class="res-arr">→</span>Evidently AI — Data and concept drift guide</a></li><li><a href="https://towardsdatascience.com/monitoring-machine-learning-models-in-production-d198a18f5d52" target="_blank"><span class="res-arr">→</span>Monitoring ML models in production</a></li></ul></div></div></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- DESTINATION -->
+    <div class="tier">
+      <div class="tier-header">
+        <div class="tier-num" style="color:var(--dim)">↓</div>
+        <div class="tier-title">Where these concepts come together</div>
+        <div class="tier-count">2 application areas</div>
+      </div>
+      <div class="destination">
+        <div class="cs-card">
+          <div class="cs-bg-num">01</div>
+          <div class="cs-eyebrow">Application area 01</div>
+          <div class="cs-title">NER Validation &amp; Retraining Pipelines</div>
+          <div class="cs-desc">Slice-aware benchmarking + weak supervision + active learning. How to maintain and improve named entity recognition models in production without drowning your annotation team.</div>
+        </div>
+        <div class="cs-card">
+          <div class="cs-bg-num">02</div>
+          <div class="cs-eyebrow">Application area 02</div>
+          <div class="cs-title">Hierarchical Document Classification</div>
+          <div class="cs-desc">Two-headed transformers, hierarchical loss functions, early exit for latency, and conditional post-processing. How to go beyond flat classifiers for structured label spaces.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .content -->
+</main>
+
+<footer>
+  <div class="footer-left">
+    <div>Built from real confusion, not a curriculum.</div>
+    <div>Every resource linked is free · no sponsors · no affiliate links · share freely</div>
+  </div>
+  <div class="footer-right">OPEN FOR EVERYONE</div>
+</footer>
+
+<script>
+function toggle(card, panelId) {
+  const panel = document.getElementById(panelId);
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.card.open').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.panel.show').forEach(p => p.classList.remove('show'));
+  if (!wasOpen) {
+    card.classList.add('open');
+    panel.classList.add('show');
+    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  }
+}
+
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = d.scrollTop / (d.scrollHeight - d.clientHeight);
+  document.getElementById('progress').style.width = Math.round(pct * 100) + '%';
+});
+</script>
+</body>
+</html>
