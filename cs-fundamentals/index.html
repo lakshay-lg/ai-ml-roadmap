@@ -15,7 +15,7 @@ html{scroll-behavior:smooth}
   --bg2:#0B120D;
   --bg3:#0F1712;
   --fg:#CFF5DA;
-  --dim:#729080;
+  --dim:#7A9C86;
   --dim2:#425249;
   --border:rgba(120,255,170,0.14);
   --border-bright:rgba(120,255,170,0.38);
@@ -26,7 +26,7 @@ html{scroll-behavior:smooth}
   --c3:#3EE7FF;   /* cyan     — databases      */
   --c4:#FF52D9;   /* magenta  — parallel/GPU   */
   --c5:#FF6B4A;   /* red/orng — distributed    */
-  --c6:#6FA8FF;   /* blue     — more reps      */
+  --c6:#6FA8FF;   /* blue     — electives      */
 }
 
 body{
@@ -38,41 +38,34 @@ body{
   overflow-x:hidden;
 }
 
-/* PROGRESS */
-.progress{position:fixed;top:0;left:0;height:2px;background:var(--green);z-index:200;width:0%;transition:width .08s linear;box-shadow:0 0 8px var(--green)}
+.cursor{display:inline-block;width:.5em;height:1em;background:var(--green);margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite;box-shadow:0 0 6px var(--green)}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 
 /* CRT overlay */
 body::before{
   content:'';
   position:fixed;
   inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(80,255,150,.025) 2px,rgba(80,255,150,.025) 4px);
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(80,255,150,.02) 2px,rgba(80,255,150,.02) 4px);
   pointer-events:none;
   z-index:999;
 }
-body::after{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(80,255,150,.05),transparent 60%);
-  pointer-events:none;
-  z-index:998;
-}
-
-.cursor{display:inline-block;width:.55em;height:1em;background:var(--green);margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite;box-shadow:0 0 6px var(--green)}
-@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 
 /* ── TERMINAL TITLEBAR ── */
 .termbar{
   display:flex;
   align-items:center;
   gap:14px;
-  padding:9px 18px;
+  padding:9px 20px;
   background:var(--bg2);
   border-bottom:1px solid var(--border-bright);
   font-size:11px;
   color:var(--dim);
   flex-wrap:wrap;
+  position:sticky;
+  top:0;
+  z-index:100;
+  backdrop-filter:blur(6px);
 }
 .dots{display:flex;gap:6px;margin-right:4px}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -82,871 +75,485 @@ body::after{
 .termpath{color:var(--fg);letter-spacing:.02em}
 .termpath .path-user{color:var(--green)}
 .termstat{margin-left:auto;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);display:flex;gap:16px}
-.termstat span{color:var(--fg)}
 
-/* ── HEADER ── */
-header{
-  border-bottom:1px solid var(--border-bright);
-  padding:40px 40px 36px;
-  position:relative;
-}
+/* ── SECTION HEAD (shared) ── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.section{padding:56px 0;border-bottom:1px solid var(--border)}
+.section-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.sh-tag{font-size:10px;letter-spacing:.16em;color:var(--green);text-transform:uppercase}
+.sh-tag::before{content:'// '}
+.section-head h2{font-family:'VT323',monospace;font-size:34px;font-weight:400;letter-spacing:.01em;color:var(--fg)}
+.sh-hint{margin-left:auto;font-size:11px;color:var(--dim)}
 
-.boot-log{
-  font-size:12px;
-  color:var(--dim);
-  margin-bottom:28px;
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-.boot-log div{opacity:0;animation:bootIn .3s forwards}
-.boot-log div:nth-child(1){animation-delay:.05s}
-.boot-log div:nth-child(2){animation-delay:.2s}
-.boot-log div:nth-child(3){animation-delay:.35s}
-.boot-log div:nth-child(4){animation-delay:.5s}
-@keyframes bootIn{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
-.tag-ok{color:var(--green);font-weight:700}
-.tag-wait{color:var(--c2);font-weight:700}
+/* ── HERO ── */
+.hero{padding:26px 0 52px}
+.boot-log{font-size:11px;color:var(--dim);margin-bottom:22px;display:flex;flex-direction:column;gap:2px}
+.boot-log .ok{color:var(--green);font-weight:700}
+
+.hero-grid{display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start}
+.eyebrow{font-size:11px;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'●';font-size:8px}
 
 h1{
   font-family:'VT323',monospace;
-  font-size:clamp(64px,10vw,132px);
-  line-height:.88;
-  letter-spacing:.01em;
+  font-weight:400;
+  font-size:clamp(42px,5.4vw,68px);
+  line-height:1.05;
+  letter-spacing:.005em;
   color:var(--fg);
-  text-shadow:0 0 18px rgba(57,255,106,.25);
-  margin-bottom:32px;
+  margin-bottom:20px;
 }
-h1 .hl{color:var(--green)}
+h1 .hl{color:var(--green);text-shadow:0 0 22px rgba(57,255,106,.35)}
 
-.header-grid{
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:32px;
-  align-items:start;
-}
+.hero-desc{font-size:13.5px;color:var(--dim);line-height:1.9;max-width:56ch}
+.hero-desc .fg{color:var(--fg)}
 
-.box{
-  border:1px dashed var(--border-bright);
-  padding:18px 20px;
-  position:relative;
-}
-.box-tag{
-  font-size:10px;
-  letter-spacing:.1em;
-  color:var(--green);
-  margin-bottom:12px;
-  text-transform:uppercase;
-}
-.box-tag::before{content:'// '}
+/* status card */
+.status-card{border:1px solid var(--border-bright);background:var(--bg2);padding:22px}
+.status-head{font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-bottom:14px;display:flex;justify-content:space-between}
+.status-num{font-family:'VT323',monospace;font-size:56px;line-height:1;color:var(--fg)}
+.status-num .unit{font-size:22px;color:var(--dim)}
+.status-label{font-size:11px;color:var(--dim);margin-bottom:18px}
 
-.box p{
-  font-size:12.5px;
-  color:var(--dim);
-  line-height:1.85;
-}
-.box p + p{margin-top:12px}
-.box p .fg{color:var(--fg)}
+.stackbar{display:flex;height:8px;width:100%;overflow:hidden;margin-bottom:14px;background:var(--bg3);border:1px solid var(--border)}
+.stackbar span{height:100%;display:block}
 
-/* Legend strips */
-.legend{
-  display:flex;
-  flex-direction:column;
-  border:1px solid var(--border-bright);
-  font-size:11px;
-}
+.status-legend{display:flex;flex-direction:column;gap:6px;font-size:10.5px}
+.status-legend div{display:flex;align-items:center;gap:8px;color:var(--dim)}
+.status-legend i{width:8px;height:8px;flex:none;display:inline-block}
+.status-legend b{color:var(--fg);font-weight:500}
+.status-legend .val{margin-left:auto;color:var(--fg)}
 
-.leg{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 12px;
-  border-bottom:1px solid var(--border);
-  letter-spacing:.04em;
-}
-.leg:last-child{border-bottom:none}
-.leg .n{color:var(--dim)}
-.leg.t1{color:var(--c1)}.leg.t2{color:var(--c2)}.leg.t3{color:var(--c3)}
-.leg.t4{color:var(--c4)}.leg.t5{color:var(--c5)}.leg.t6{color:var(--c6)}
-
-/* ── MAIN ── */
-main{
-  display:grid;
-  grid-template-columns:64px 1fr;
-}
-
-/* Sidebar addresses */
-.sidebar{
-  border-right:1px solid var(--border-bright);
-  display:flex;
-  flex-direction:column;
+/* ── PIPELINE ── */
+.pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:8px 0 4px}
+.pnode{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;flex:none;transition:transform .15s}
+.pnode:hover{transform:translateY(-3px)}
+.pdot{
+  width:52px;height:52px;border-radius:50%;
+  border:2px solid var(--pc,var(--border-bright));
+  color:var(--pc,var(--fg));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'VT323',monospace;font-size:22px;
   background:var(--bg2);
+  transition:box-shadow .15s;
+}
+.pnode:hover .pdot{box-shadow:0 0 16px var(--pc,transparent)}
+.pnode.optional .pdot{border-style:dashed}
+.plabel{font-size:10px;text-align:center;color:var(--fg);letter-spacing:.03em;line-height:1.5}
+.plabel i{display:block;color:var(--dim);font-style:normal;font-size:9.5px}
+.pline{flex:1 1 40px;height:2px;background:var(--border-bright);min-width:24px;margin:0 2px;align-self:center;transform:translateY(-19px)}
+.pline.dashed{background:none;border-top:2px dashed var(--border-bright)}
+
+@media(max-width:820px){
+  .pipeline{flex-direction:column;align-items:flex-start;gap:18px}
+  .pnode{flex-direction:row;gap:14px}
+  .plabel{text-align:left}
+  .pline{width:2px;height:22px;min-width:0;flex:none;margin:0 0 0 25px;transform:none}
 }
 
-.sb-cell{
-  border-bottom:1px solid var(--border);
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  font-size:10px;
-  letter-spacing:.15em;
-  color:var(--dim);
-  padding:16px 0;
-  min-height:120px;
-  writing-mode:vertical-rl;
-}
-.sb-cell .addr{font-family:'JetBrains Mono';font-size:9px;opacity:.6;writing-mode:vertical-rl}
-
-/* Content column */
-.content{display:flex;flex-direction:column;}
-
-/* ── TIER ── */
-.tier{
-  border-bottom:1px solid var(--border-bright);
-  opacity:0;
-  transform:translateX(-8px);
-  animation:slideIn .4s forwards;
-}
-
-@keyframes slideIn{to{opacity:1;transform:translateX(0)}}
-
-.tier:nth-child(1){animation-delay:.05s}
-.tier:nth-child(2){animation-delay:.15s}
-.tier:nth-child(3){animation-delay:.25s}
-.tier:nth-child(4){animation-delay:.35s}
-.tier:nth-child(5){animation-delay:.42s}
-.tier:nth-child(6){animation-delay:.48s}
-.tier:nth-child(7){animation-delay:.53s}
-
-.tier-header{
-  display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
-  align-items:center;
-  gap:0;
-  border-bottom:1px solid var(--border);
-  padding:0;
-  background:var(--bg2);
-}
-
-.tier-num{
-  font-family:'VT323',monospace;
-  font-size:34px;
-  padding:6px 20px;
-  border-right:1px solid var(--border);
-  line-height:1;
-}
-
-.tier-title{
-  font-size:12px;
-  letter-spacing:.03em;
-  color:var(--fg);
-  padding:0 16px;
-  min-width:0;
-  overflow-wrap:break-word;
-}
-.tier-title .prompt{color:var(--green);margin-right:6px}
-
-.tier-sub{
-  color:var(--dim);
-  font-size:11px;
-  display:block;
-  margin-top:2px;
-}
-
-.tier-count{
-  font-size:10px;
-  color:var(--dim);
-  border-left:1px solid var(--border);
-  padding:0 16px;
-  height:100%;
-  display:flex;
-  align-items:center;
-  letter-spacing:.06em;
-  white-space:nowrap;
-}
-
-/* CARDS GRID */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  border-bottom:0;
-}
-
-.cards-3{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  border-bottom:0;
-}
-
-.card{
-  border-right:1px solid var(--border);
-  padding:18px 18px 34px;
-  cursor:pointer;
-  transition:background .12s;
-  position:relative;
-  overflow:hidden;
-}
-
-.card:last-child{border-right:none}
-
-.card::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:2px;
-  background:currentColor;
-  transform:scaleX(0);
-  transform-origin:left;
-  transition:transform .2s;
-}
-
-.card:hover::before,.card.open::before{transform:scaleX(1)}
-
-.card:hover{background:var(--bg2)}
-.card.open{background:var(--bg2)}
-
-.card.t1{color:var(--c1)}.card.t2{color:var(--c2)}.card.t3{color:var(--c3)}
-.card.t4{color:var(--c4)}.card.t5{color:var(--c5)}.card.t6{color:var(--c6)}
-
-.card-num{
-  font-size:10px;
-  color:var(--dim);
-  letter-spacing:.06em;
-  margin-bottom:10px;
-}
-.card-num::before{content:'['}
-.card-num::after{content:']'}
-
-.card-title{
-  font-size:14px;
-  font-weight:700;
-  color:var(--fg);
-  line-height:1.3;
-  margin-bottom:6px;
-}
-
-.card-sub{
-  font-size:11px;
-  color:var(--dim);
-  line-height:1.5;
-}
-
-.card-arrow{
-  position:absolute;
-  bottom:14px;
-  left:18px;
-  font-size:10px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  opacity:0;
-  transition:opacity .15s,transform .15s;
-  transform:translateX(-4px);
-}
-.card-arrow::before{content:'▸ '}
-
-.card:hover .card-arrow{opacity:1;transform:translateX(0)}
-.card.open .card-arrow{opacity:0}
-
-/* PANEL — man-page style */
-.panel{
-  display:none;
-  border-top:1px solid var(--border-bright);
-  background:var(--bg3);
-}
-
-.panel.show{display:block;animation:panelIn .18s ease}
-
-@keyframes panelIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-
-.panel-inner{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-}
-
-.panel-left{
-  padding:26px 30px;
-  border-right:1px solid var(--border);
-}
-
-.panel-right{
-  padding:26px 30px;
-  background:var(--bg);
-}
-
-.panel-label{
-  font-size:10px;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  margin-bottom:4px;
-  color:var(--dim);
-}
-.panel-label::before{content:'NAME  '}
-
-.panel-name{
-  font-family:'VT323',monospace;
-  font-size:32px;
-  line-height:1;
-  color:var(--fg);
-  margin-bottom:14px;
-  letter-spacing:.01em;
-}
-
-.panel-desc-label{
-  font-size:10px;
-  letter-spacing:.1em;
-  color:var(--dim);
-  margin-bottom:8px;
-}
-
-.panel-text{
-  font-size:12.5px;
-  color:var(--fg);
-  opacity:.85;
-  line-height:1.85;
-  border-left:2px solid var(--border-bright);
-  padding-left:14px;
-}
-
-.panel-stats{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:18px;
-}
-
-.pstat{
-  font-size:10px;
-  letter-spacing:.02em;
-  padding:5px 9px;
-  border:1px solid var(--border-bright);
-  color:var(--dim);
-  background:var(--bg2);
-}
-.pstat .k{color:var(--fg)}
-
-.res-heading{
-  font-size:10px;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--dim);
-  margin-bottom:14px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--border);
-}
-.res-heading::before{content:'SEE ALSO  '}
-
-.res-list{list-style:none;display:flex;flex-direction:column;gap:1px}
-
-.res-list a{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-  text-decoration:none;
-  color:var(--dim);
-  font-size:11.5px;
-  line-height:1.5;
-  padding:8px 10px;
-  border:1px solid transparent;
+/* ── FILTERS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.chip{
+  font-family:inherit;font-size:11px;letter-spacing:.03em;
+  padding:8px 14px;border:1px solid var(--border-bright);
+  background:transparent;color:var(--dim);cursor:pointer;
   transition:all .12s;
 }
+.chip:hover{color:var(--fg);border-color:var(--green)}
+.chip.active{background:var(--green);color:#04170A;border-color:var(--green);font-weight:700}
 
-.res-list a:hover{
-  color:var(--fg);
-  border-color:var(--border-bright);
-  background:var(--bg2);
+/* ── MODULES (accordion) ── */
+.module-list{display:flex;flex-direction:column;gap:1px}
+.module{border:1px solid var(--border);background:var(--bg2);transition:opacity .15s,max-height .15s}
+.module.hide{display:none}
+.module + .module{margin-top:10px}
+
+.module-head{
+  width:100%;display:grid;grid-template-columns:auto 1fr auto auto;
+  align-items:center;gap:18px;padding:18px 20px;
+  background:none;border:none;color:inherit;font-family:inherit;
+  cursor:pointer;text-align:left;
+}
+.mod-index{font-family:'VT323',monospace;font-size:30px;color:var(--mc,var(--fg));width:44px}
+.mod-name{font-size:14.5px;font-weight:700;color:var(--fg)}
+.mod-sub{font-size:11px;color:var(--dim);margin-top:2px}
+.mod-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.mod-tag{font-size:9.5px;letter-spacing:.04em;padding:4px 8px;border:1px solid var(--border-bright);color:var(--dim);white-space:nowrap}
+.mod-chevron{font-size:18px;color:var(--dim);transition:transform .2s;width:18px;text-align:center}
+.module.open .mod-chevron{transform:rotate(45deg);color:var(--mc,var(--green))}
+
+.module-body{display:none;padding:0 20px 26px 84px;border-top:1px solid var(--border)}
+.module.open .module-body{display:block;padding-top:20px;animation:openIn .18s ease}
+@keyframes openIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.module-intro{font-size:12.5px;color:var(--dim);line-height:1.85;margin-bottom:20px;max-width:80ch}
+
+.lab-list{list-style:none;display:flex;flex-direction:column;gap:18px}
+.lab-list li{display:grid;grid-template-columns:30px 1fr;gap:12px}
+.lab-n{font-family:'VT323',monospace;font-size:20px;color:var(--mc,var(--dim));line-height:1.6}
+.lab-body h4{font-size:13px;color:var(--fg);margin-bottom:5px}
+.lab-body p{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:8px}
+.lab-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.lab-tag{font-size:9.5px;padding:3px 7px;border:1px solid var(--border-bright);color:var(--dim)}
+.lab-tag .k{color:var(--fg)}
+.lab-res{display:flex;flex-wrap:wrap;gap:4px 16px}
+.lab-res a{font-size:11px;color:var(--dim);text-decoration:none;border-bottom:1px dotted var(--dim2)}
+.lab-res a:hover{color:var(--fg);border-color:var(--fg)}
+.lab-res a::before{content:'→ ';color:var(--green)}
+
+.module-cta{
+  display:inline-flex;align-items:center;gap:8px;margin-top:22px;
+  font-size:11.5px;letter-spacing:.04em;color:var(--bg);
+  background:var(--mc,var(--green));padding:10px 16px;text-decoration:none;font-weight:700;
 }
 
-.res-arr{opacity:.5;flex-shrink:0;margin-top:1px;color:var(--green)}
+/* electives divider */
+.elective-divider{font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:24px 0 10px;padding-top:14px;border-top:1px dashed var(--border-bright)}
+.elective-divider::before{content:'// '}
 
-/* CONNECTOR — boot-log line */
-.connector{
-  display:flex;
-  align-items:center;
-  padding:0 20px;
-  height:34px;
-  background:var(--bg);
-  border-bottom:1px solid var(--border);
-  font-size:11px;
-  color:var(--dim);
-  position:relative;
-}
-.connector .ok{color:var(--green);font-weight:700;margin-right:8px}
-.connector .wait{color:var(--c2);font-weight:700;margin-right:8px}
+/* ── SYNTHESIS (closing diagram) ── */
+.synth{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.synth-box{flex:1 1 320px;border:1px solid var(--border-bright);background:var(--bg2);padding:26px}
+.synth-eyebrow{font-size:10px;letter-spacing:.1em;color:var(--green);text-transform:uppercase;margin-bottom:10px}
+.synth-eyebrow::before{content:'// '}
+.synth-title{font-family:'VT323',monospace;font-size:26px;color:var(--fg);margin-bottom:10px}
+.synth-desc{font-size:12px;color:var(--dim);line-height:1.85}
+.synth-arrow{flex:0 0 64px;display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:34px;color:var(--green)}
+@media(max-width:760px){.synth-arrow{flex-direction:column;font-size:22px;padding:8px 0}}
 
-/* CLOSING */
-.destination{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-}
-
-.cs-card{
-  padding:30px;
-  border-right:1px solid var(--border);
-  position:relative;
-  overflow:hidden;
-}
-
-.cs-card:last-child{border-right:none}
-
-.cs-bg-num{
-  position:absolute;
-  bottom:-30px;
-  right:14px;
-  font-family:'VT323',monospace;
-  font-size:170px;
-  color:rgba(120,255,170,.04);
-  line-height:1;
-  pointer-events:none;
-  user-select:none;
-}
-
-.cs-eyebrow{
-  font-size:10px;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--green);
-  margin-bottom:12px;
-}
-.cs-eyebrow::before{content:'// '}
-
-.cs-title{
-  font-family:'VT323',monospace;
-  font-size:26px;
-  color:var(--fg);
-  line-height:1.1;
-  letter-spacing:.02em;
-  margin-bottom:12px;
-}
-
-.cs-desc{
-  font-size:12px;
-  color:var(--dim);
-  line-height:1.8;
-}
-
-/* FOOTER — shell prompt */
+/* ── FOOTER ── */
 footer{
   border-top:1px solid var(--border-bright);
-  padding:20px 40px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
+  padding:22px 0 40px;
   background:var(--bg2);
 }
-
-.footer-left{
-  font-size:11px;
-  color:var(--dim);
-  line-height:1.9;
-}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-left{font-size:11px;color:var(--dim);line-height:1.9}
 .footer-left .prompt{color:var(--green)}
 .footer-left .fg{color:var(--fg)}
-
-.footer-right{
-  font-size:11px;
-  letter-spacing:.08em;
-  color:var(--dim);
-}
+.footer-right{font-size:11px;letter-spacing:.08em;color:var(--dim)}
 
 /* RESPONSIVE */
 @media(max-width:900px){
-  header{padding:32px 24px 28px}
-  .header-grid{grid-template-columns:1fr;gap:20px}
-  h1{font-size:80px}
-  main{grid-template-columns:1fr}
-  .sidebar{display:none}
-  .cards{grid-template-columns:repeat(2,1fr)}
-  .cards-3{grid-template-columns:repeat(2,1fr)}
-  .destination{grid-template-columns:1fr}
-  .cs-card:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .wrap{padding:0 22px}
+  .hero-grid{grid-template-columns:1fr;gap:24px}
+  .status-card{max-width:420px}
   .termstat{display:none}
 }
-
 @media(max-width:600px){
-  header{padding:24px 18px 24px}
-  h1{font-size:56px}
-  .cards{grid-template-columns:1fr}
-  .cards-3{grid-template-columns:1fr}
-  .panel-inner{grid-template-columns:1fr}
-  .panel-left{border-right:none;border-bottom:1px solid var(--border)}
-  footer{padding:18px}
-  .footer-right{display:none}
+  .section{padding:40px 0}
+  .module-head{grid-template-columns:auto 1fr auto;gap:10px;padding:16px}
+  .mod-tags{display:none}
+  .module-body{padding-left:20px}
+  .lab-list li{grid-template-columns:22px 1fr}
   .termpath{font-size:10px}
+  .footer-right{display:none}
 }
 </style>
 </head>
 <body>
 
-<div class="progress" id="progress"></div>
-
 <div class="termbar">
   <span class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span>
   <span class="termpath"><span class="path-user">guest@roadmap</span>:~/cs-fundamentals$</span>
-  <span class="termstat"><span>6</span>tiers <span>25</span>labs <span>c·c++·go</span></span>
+  <span class="termstat">6 tracks · 23 builds · c · c++ · go · cuda</span>
 </div>
 
-<header>
-  <div class="boot-log">
-    <div><span class="tag-ok">[ OK ]</span> mounted 6 course modules — MIT / CMU / Stanford / Berkeley / UW / Brown</div>
-    <div><span class="tag-ok">[ OK ]</span> linked 25 lab projects across C, C++, Go, CUDA</div>
-    <div><span class="tag-ok">[ OK ]</span> resolved free-resources/ — no accounts, no paywalls</div>
-    <div><span class="tag-wait">[ .. ]</span> you have never had to build any of this. that's the point.<span class="cursor"></span></div>
+<div class="wrap">
+  <div class="hero">
+    <div class="boot-log">
+      <div><span class="ok">[ OK ]</span> mounted 6 course modules — MIT / CMU / Stanford / Berkeley / UW / Brown</div>
+      <div>you have never had to build any of this. that's the point.<span class="cursor"></span></div>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">self-study · 25 free labs</div>
+        <h1>Build the machine<br>you use <span class="hl">every day.</span></h1>
+        <p class="hero-desc"><span class="fg">An OS, a network stack, a database engine, a distributed store</span> — most of us use all four daily and have built none of them. This is the internet's go-to reading list for actually understanding systems: six project-first courses from MIT, CMU, Stanford, Berkeley, UW, and Brown. Every lab is public and free.</p>
+      </div>
+
+      <div class="status-card">
+        <div class="status-head"><span>status</span><span>6/6 mapped</span></div>
+        <div class="status-num">23<span class="unit">&nbsp;builds</span></div>
+        <div class="status-label">across 5 core tracks + electives</div>
+        <div class="stackbar">
+          <span style="width:17.4%;background:var(--c1)"></span>
+          <span style="width:17.4%;background:var(--c2)"></span>
+          <span style="width:17.4%;background:var(--c3)"></span>
+          <span style="width:17.4%;background:var(--c4)"></span>
+          <span style="width:17.4%;background:var(--c5)"></span>
+          <span style="width:13%;background:var(--c6)"></span>
+        </div>
+        <div class="status-legend">
+          <div><i style="background:var(--c1)"></i><b>01 OS</b> · xv6<span class="val">4</span></div>
+          <div><i style="background:var(--c2)"></i><b>02 Networking</b> · CS144<span class="val">4</span></div>
+          <div><i style="background:var(--c3)"></i><b>03 Databases</b> · BusTub<span class="val">4</span></div>
+          <div><i style="background:var(--c4)"></i><b>04 Parallel/GPU</b><span class="val">4</span></div>
+          <div><i style="background:var(--c5)"></i><b>05 Distributed</b> · 6.5840<span class="val">4</span></div>
+          <div><i style="background:var(--c6)"></i><b>06 Electives</b><span class="val">3</span></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <h1>BUILD<br>THE<br><span class="hl">MACHINE</span></h1>
-  <div class="header-grid">
-    <div class="box">
-      <div class="box-tag">WHY_THIS_LIST</div>
-      <p><span class="fg">Most of us use an OS, a network stack, a database, and a distributed store every single day without ever building one.</span> These six courses are the internet's go-to answer for "how do I actually understand systems" — not by reading about them, but by writing an OS kernel, a TCP stack, a database engine, and a Raft cluster from scratch.</p>
-      <p>Go top to bottom for the full sequence, or jump straight to the tier you need. Every course is taught at a top CS program and every lab is public and free.</p>
+</div>
+
+<div class="wrap">
+  <section class="section" id="pipeline">
+    <div class="section-head">
+      <span class="sh-tag">build_order</span>
+      <h2>The shortest path through six systems</h2>
+      <span class="sh-hint">click a node to jump →</span>
     </div>
-    <div class="legend">
-      <div class="leg t1"><span>01_operating_systems</span><span class="n">MIT 6.1810</span></div>
-      <div class="leg t2"><span>02_networking</span><span class="n">CS144</span></div>
-      <div class="leg t3"><span>03_databases</span><span class="n">CMU 15-445</span></div>
-      <div class="leg t4"><span>04_parallel_gpu</span><span class="n">15-418/CS149</span></div>
-      <div class="leg t5"><span>05_distributed</span><span class="n">MIT 6.5840</span></div>
-      <div class="leg t6"><span>06_more_reps</span><span class="n">electives</span></div>
+    <div class="pipeline">
+      <a class="pnode" style="--pc:var(--c1)" href="#mod-01"><span class="pdot">01</span><span class="plabel">Operating<br>Systems<i>MIT 6.1810</i></span></a>
+      <span class="pline"></span>
+      <a class="pnode" style="--pc:var(--c2)" href="#mod-02"><span class="pdot">02</span><span class="plabel">Networking<i>Stanford CS144</i></span></a>
+      <span class="pline"></span>
+      <a class="pnode" style="--pc:var(--c3)" href="#mod-03"><span class="pdot">03</span><span class="plabel">Databases<i>CMU 15-445</i></span></a>
+      <span class="pline"></span>
+      <a class="pnode" style="--pc:var(--c4)" href="#mod-04"><span class="pdot">04</span><span class="plabel">Parallel &amp;<br>GPU<i>15-418 / CS149</i></span></a>
+      <span class="pline"></span>
+      <a class="pnode" style="--pc:var(--c5)" href="#mod-05"><span class="pdot">05</span><span class="plabel">Distributed<br>Systems<i>MIT 6.5840</i></span></a>
+      <span class="pline dashed"></span>
+      <a class="pnode optional" style="--pc:var(--c6)" href="#mod-06"><span class="pdot">＋</span><span class="plabel">Electives<i>optional</i></span></a>
     </div>
-  </div>
-</header>
+  </section>
 
-<main>
-  <div class="sidebar">
-    <div class="sb-cell" style="color:var(--c1)">OS<span class="addr">0x1810</span></div>
-    <div class="sb-cell" style="color:var(--c2)">NET<span class="addr">0x0144</span></div>
-    <div class="sb-cell" style="color:var(--c3)">DB<span class="addr">0x0445</span></div>
-    <div class="sb-cell" style="color:var(--c4)">SIMD<span class="addr">0x0418</span></div>
-    <div class="sb-cell" style="color:var(--c5)">DIST<span class="addr">0x5840</span></div>
-    <div class="sb-cell" style="color:var(--c6)">MORE<span class="addr">0x01FF</span></div>
-    <div class="sb-cell" style="color:var(--dim)">EOF<span class="addr">--</span></div>
-  </div>
-
-  <div class="content">
-
-    <!-- TIER 1 — MIT 6.1810 -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--c1)">01</div>
-        <div class="tier-title"><span class="prompt">$</span>cat 01_operating_systems/README<span class="tier-sub">MIT 6.1810 — Operating System Engineering (fka 6.828 / 6.S081) · xv6, in C</span></div>
-        <div class="tier-count">9 labs</div>
-      </div>
-      <div class="cards">
-
-        <div class="card t1" onclick="toggle(this,'p-t1a')">
-          <div class="card-num">01.01</div>
-          <div class="card-title">Unix utilities &amp; syscalls</div>
-          <div class="card-sub">xargs, find · trace, sysinfo</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t1" onclick="toggle(this,'p-t1b')">
-          <div class="card-num">01.02</div>
-          <div class="card-title">Page tables &amp; traps</div>
-          <div class="card-sub">virtual memory · interrupts</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t1" onclick="toggle(this,'p-t1c')">
-          <div class="card-num">01.03</div>
-          <div class="card-title">Copy-on-write &amp; locks</div>
-          <div class="card-sub">lazy fork · parallel kernel</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t1" onclick="toggle(this,'p-t1d')">
-          <div class="card-num">01.04</div>
-          <div class="card-title">File system, mmap &amp; net</div>
-          <div class="card-sub">large files · symlinks · NIC driver</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-      </div>
-      <div class="panel" id="p-t1a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c1)">01.01 — unix utilities &amp; syscalls</div><div class="panel-name">Utilities &amp; Syscalls</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You start by writing small Unix tools (a Xargs, a Find, a ping-pong pipe program) directly against xv6's syscall interface, then add two new syscalls yourself — a syscall tracer and a sysinfo call that reports kernel state. This is the on-ramp: it forces you to read the xv6 source and understand exactly how a process asks the kernel to do something, before you touch anything that runs in kernel mode.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">c</span></span><span class="pstat">ARCH=<span class="k">riscv64</span></span><span class="pstat">EMU=<span class="k">qemu</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank"><span class="res-arr">→</span>6.1810 course site — schedule, labs, lecture notes</a></li><li><a href="https://github.com/mit-pdos/xv6-riscv" target="_blank"><span class="res-arr">→</span>xv6-riscv — the OS you'll be extending, on GitHub</a></li><li><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank"><span class="res-arr">→</span>The xv6 book — line-by-line commentary on the kernel</a></li></ul></div></div></div>
-      <div class="panel" id="p-t1b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c1)">01.02 — page tables &amp; traps</div><div class="panel-name">Page Tables &amp; Traps</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You print a process's page table, then add a second, larger address space per process to speed up syscalls, before moving into how xv6 handles traps — the mechanism that switches from user mode to kernel mode on a syscall, interrupt, or exception. By the end you understand exactly what "the CPU jumps into the kernel" means at the level of RISC-V registers, the trampoline page, and the trapframe.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">c</span></span><span class="pstat">TOPIC=<span class="k">vm+traps</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank"><span class="res-arr">→</span>6.1810 — pgtbl and traps lab handouts</a></li><li><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank"><span class="res-arr">→</span>xv6 book, ch. 3–4 — Page tables and Traps</a></li></ul></div></div></div>
-      <div class="panel" id="p-t1c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c1)">01.03 — copy-on-write &amp; locks</div><div class="panel-name">Copy-on-Write &amp; Locks</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">fork() in xv6 naively copies the entire parent address space — you rewrite it to share physical pages between parent and child and only copy-on-write when either one writes, with a reference count to avoid freeing memory too early. Then you go multiprocessor: replace xv6's coarse kernel lock with fine-grained locks in the memory allocator and the buffer cache, and watch throughput actually scale with cores instead of serializing on one giant lock.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">c</span></span><span class="pstat">SMP=<span class="k">on</span></span><span class="pstat">RACE=<span class="k">watch</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank"><span class="res-arr">→</span>6.1810 — cow and lock lab handouts</a></li><li><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank"><span class="res-arr">→</span>xv6 book, ch. 6 — Locking</a></li></ul></div></div></div>
-      <div class="panel" id="p-t1d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c1)">01.04 — file system, mmap &amp; networking</div><div class="panel-name">FS, mmap &amp; Net</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You extend xv6's on-disk file system to support larger files and symbolic links, then implement mmap() to map files directly into a process's address space with lazy, page-fault-driven loading. The last lab hands you a real NIC (the E1000) and has you write the driver's transmit and receive paths — so the semester ends with your kernel talking to the outside world, not just to itself.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">c</span></span><span class="pstat">DEV=<span class="k">e1000</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank"><span class="res-arr">→</span>6.1810 — fs, mmap and net lab handouts</a></li><li><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank"><span class="res-arr">→</span>xv6 book, ch. 8 — File system</a></li></ul></div></div></div>
+  <section class="section" id="modules">
+    <div class="section-head">
+      <span class="sh-tag">modules</span>
+      <h2>Six tracks, twenty-three builds</h2>
+    </div>
+    <div class="filters">
+      <button class="chip active" data-filter="all">all languages</button>
+      <button class="chip" data-filter="c">C</button>
+      <button class="chip" data-filter="cpp">C++</button>
+      <button class="chip" data-filter="go">Go</button>
+      <button class="chip" data-filter="gpu">CUDA / ISPC / OpenMP</button>
     </div>
 
-    <div class="connector"><span class="ok">[ OK ]</span> 01/06 kernel-space linked → next: 02_networking</div>
+    <div class="module-list" id="moduleList">
 
-    <!-- TIER 2 — Stanford CS144 -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--c2)">02</div>
-        <div class="tier-title"><span class="prompt">$</span>cat 02_networking/README<span class="tier-sub">Stanford CS144 — Intro to Computer Networking · build a TCP/IP stack, in C++</span></div>
-        <div class="tier-count">7 checkpoints</div>
+      <!-- MODULE 01 — MIT 6.1810 -->
+      <div class="module" id="mod-01" data-lang="c" style="--mc:var(--c1)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">01</span>
+          <span>
+            <span class="mod-name">MIT 6.1810 — Operating System Engineering</span>
+            <div class="mod-sub">fka 6.828 / 6.S081 · xv6, in C · 9 labs</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">LANG=C</span><span class="mod-tag">RISC-V</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">You extend xv6 — a small teaching Unix — from simple userspace tools all the way to a multiprocessor kernel with virtual memory, copy-on-write, and a real NIC driver. It's the deepest, most literal way to understand what an operating system actually does underneath every syscall you've ever called.</p>
+          <ol class="lab-list">
+            <li><span class="lab-n">01</span><div class="lab-body"><h4>Unix utilities &amp; syscalls</h4><p>You start by writing small Unix tools (a Xargs, a Find, a ping-pong pipe program) directly against xv6's syscall interface, then add two new syscalls yourself — a syscall tracer and a sysinfo call that reports kernel state. This is the on-ramp: it forces you to read the xv6 source before you touch anything that runs in kernel mode.</p><div class="lab-tags"><span class="lab-tag">ARCH=<span class="k">riscv64</span></span><span class="lab-tag">EMU=<span class="k">qemu</span></span></div><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank">6.1810 course site — schedule, labs, lecture notes</a><a href="https://github.com/mit-pdos/xv6-riscv" target="_blank">xv6-riscv on GitHub</a></div></div></li>
+            <li><span class="lab-n">02</span><div class="lab-body"><h4>Page tables &amp; traps</h4><p>You print a process's page table, add a second address space to speed up syscalls, then work through how xv6 handles traps — the mechanism that switches from user mode to kernel mode on a syscall, interrupt, or exception. By the end you know exactly what "the CPU jumps into the kernel" means at the level of registers and the trapframe.</p><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank">pgtbl &amp; traps lab handouts</a><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank">xv6 book, ch. 3–4</a></div></div></li>
+            <li><span class="lab-n">03</span><div class="lab-body"><h4>Copy-on-write &amp; locks</h4><p>fork() naively copies the entire parent address space — you rewrite it to share physical pages and only copy-on-write when either side writes. Then you go multiprocessor: replace xv6's coarse kernel lock with fine-grained locks in the allocator and buffer cache, and watch throughput actually scale with cores.</p><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank">cow &amp; lock lab handouts</a><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank">xv6 book, ch. 6 — Locking</a></div></div></li>
+            <li><span class="lab-n">04</span><div class="lab-body"><h4>File system, mmap &amp; networking</h4><p>You extend the on-disk file system with larger files and symlinks, implement mmap() with lazy page-fault-driven loading, then write an E1000 NIC driver's transmit/receive paths — so the semester ends with your kernel talking to the outside world, not just to itself.</p><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank">fs, mmap &amp; net lab handouts</a><a href="https://github.com/mit-pdos/xv6-riscv-book" target="_blank">xv6 book, ch. 8 — File system</a></div></div></li>
+          </ol>
+          <a class="module-cta" href="https://pdos.csail.mit.edu/6.1810/2025/" target="_blank">open 6.1810 →</a>
+        </div>
       </div>
-      <div class="cards">
 
-        <div class="card t2" onclick="toggle(this,'p-t2a')">
-          <div class="card-num">02.01</div>
-          <div class="card-title">Byte stream &amp; reassembly</div>
-          <div class="card-sub">in-memory stream · out-of-order bytes</div>
-          <div class="card-arrow">run</div>
+      <!-- MODULE 02 — Stanford CS144 -->
+      <div class="module" id="mod-02" data-lang="cpp" style="--mc:var(--c2)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">02</span>
+          <span>
+            <span class="mod-name">Stanford CS144 — Intro to Computer Networking</span>
+            <div class="mod-sub">build a TCP/IP stack, in C++ · 7 checkpoints</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">LANG=C++20</span><span class="mod-tag">Minnow</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">You build TCP/IP from the byte stream up: reassembly, the receiver, the sender, then ARP and IP routing — ending with a stack that can hold a real connection with an actual server on the internet.</p>
+          <ol class="lab-list">
+            <li><span class="lab-n">01</span><div class="lab-body"><h4>Byte stream &amp; reassembly</h4><p>Checkpoint 0 has you write a tiny web crawler against the kernel's own TCP socket, then implement an in-memory reliable byte stream. Checkpoint 1 is the Reassembler: segments arrive out of order and can overlap or duplicate, and your job is to stitch arbitrary byte ranges back into one ordered stream.</p><div class="lab-res"><a href="https://cs144.github.io/" target="_blank">CS144 course site — checkpoints 0–7</a><a href="https://beej.us/guide/bgnet/" target="_blank">Beej's Guide to Network Programming</a></div></div></li>
+            <li><span class="lab-n">02</span><div class="lab-body"><h4>TCP receiver</h4><p>You implement the receiving half of TCP: turning segments into calls on your Reassembler, tracking the 32-bit sequence-number space with wraparound, and reporting a correct window size back to the sender. This is where TCP's "reliable stream over an unreliable network" promise actually gets kept.</p><div class="lab-res"><a href="https://cs144.github.io/" target="_blank">TCP Receiver checkpoint handout</a><a href="https://www.rfc-editor.org/rfc/rfc9293" target="_blank">RFC 9293 — the TCP specification</a></div></div></li>
+            <li><span class="lab-n">03</span><div class="lab-body"><h4>TCP sender</h4><p>The sender decides when to send, what to send, and when to give up and retransmit — a timer that doubles on every consecutive timeout and resets once an ACK makes progress. Put receiver and sender together and you have a working, RFC-compliant TCP.</p><div class="lab-res"><a href="https://cs144.github.io/" target="_blank">TCP Sender checkpoint handout</a><a href="https://www.rfc-editor.org/rfc/rfc6298" target="_blank">RFC 6298 — retransmission timer</a></div></div></li>
+            <li><span class="lab-n">04</span><div class="lab-body"><h4>Network interface &amp; router</h4><p>The last checkpoints drop a layer: a NetworkInterface translating IP datagrams to Ethernet frames via ARP, then an IP router forwarding by longest-prefix match. Finish this and you've implemented every layer between send() and a frame on the wire.</p><div class="lab-res"><a href="https://cs144.github.io/" target="_blank">Interface &amp; IP Router handouts</a><a href="https://www.rfc-editor.org/rfc/rfc826" target="_blank">RFC 826 — ARP</a></div></div></li>
+          </ol>
+          <a class="module-cta" href="https://cs144.github.io/" target="_blank">open CS144 →</a>
         </div>
-
-        <div class="card t2" onclick="toggle(this,'p-t2b')">
-          <div class="card-num">02.02</div>
-          <div class="card-title">TCP receiver</div>
-          <div class="card-sub">sequence numbers · sliding window</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t2" onclick="toggle(this,'p-t2c')">
-          <div class="card-num">02.03</div>
-          <div class="card-title">TCP sender</div>
-          <div class="card-sub">retransmission · congestion control</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t2" onclick="toggle(this,'p-t2d')">
-          <div class="card-num">02.04</div>
-          <div class="card-title">Network interface &amp; router</div>
-          <div class="card-sub">ARP, Ethernet · IP forwarding</div>
-          <div class="card-arrow">run</div>
-        </div>
-
       </div>
-      <div class="panel" id="p-t2a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c2)">02.01 — byte stream &amp; reassembly</div><div class="panel-name">Byte Stream &amp; Reassembly</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Checkpoint 0 has you write a tiny web crawler against the kernel's own TCP socket so you've felt what the abstraction you're about to build actually does, then implement an in-memory reliable byte stream. Checkpoint 1 is the Reassembler: network segments arrive out of order and can overlap or duplicate, and your job is to stitch arbitrary incoming byte ranges back into one ordered stream — the unglamorous piece that makes everything after it possible.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp20</span></span><span class="pstat">LIB=<span class="k">minnow</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs144.github.io/" target="_blank"><span class="res-arr">→</span>CS144 course site — checkpoints 0–7, all public</a></li><li><a href="https://beej.us/guide/bgnet/" target="_blank"><span class="res-arr">→</span>Beej's Guide to Network Programming — sockets primer</a></li></ul></div></div></div>
-      <div class="panel" id="p-t2b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c2)">02.02 — tcp receiver</div><div class="panel-name">TCP Receiver</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You implement the receiving half of TCP: turning incoming segments into calls on your Reassembler, tracking the 32-bit sequence-number space (with wraparound and the initial-sequence-number offset), and reporting a correct window size back to the sender so it knows how much more it's allowed to send. This is where TCP's "reliable stream over an unreliable network" promise actually gets kept — and where the classic off-by-one sequence number bugs live.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp20</span></span><span class="pstat">INTEROP=<span class="k">real-tcp</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs144.github.io/" target="_blank"><span class="res-arr">→</span>CS144 — TCP Receiver checkpoint handout</a></li><li><a href="https://www.rfc-editor.org/rfc/rfc9293" target="_blank"><span class="res-arr">→</span>RFC 9293 — the current TCP specification</a></li></ul></div></div></div>
-      <div class="panel" id="p-t2c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c2)">02.03 — tcp sender</div><div class="panel-name">TCP Sender</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">The sender side has to decide when to send, what to send, and when to give up waiting and retransmit — implemented with a retransmission timer that doubles on every consecutive timeout (exponential backoff) and resets once an ACK makes progress. Put your receiver and sender together and you have a working, RFC-compliant TCP that can hold a real connection with an actual server on the internet — the moment this course is built around.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp20</span></span><span class="pstat">RTO=<span class="k">backoff</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs144.github.io/" target="_blank"><span class="res-arr">→</span>CS144 — TCP Sender checkpoint handout</a></li><li><a href="https://www.rfc-editor.org/rfc/rfc6298" target="_blank"><span class="res-arr">→</span>RFC 6298 — computing TCP's retransmission timer</a></li></ul></div></div></div>
-      <div class="panel" id="p-t2d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c2)">02.04 — network interface &amp; router</div><div class="panel-name">Interface &amp; Router</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">The last checkpoints drop down a layer: a NetworkInterface that translates between IP datagrams and Ethernet frames using ARP (with a cache and retransmission of pending requests), and then an IP router that holds a forwarding table and picks the correct outgoing interface by longest-prefix match. Finish this and you've personally implemented every layer between "a program calls send()" and "a frame goes out on the wire."</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp20</span></span><span class="pstat">PROTO=<span class="k">arp+ip</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs144.github.io/" target="_blank"><span class="res-arr">→</span>CS144 — Network Interface &amp; IP Router handouts</a></li><li><a href="https://www.rfc-editor.org/rfc/rfc826" target="_blank"><span class="res-arr">→</span>RFC 826 — the Address Resolution Protocol</a></li></ul></div></div></div>
+
+      <!-- MODULE 03 — CMU 15-445 -->
+      <div class="module" id="mod-03" data-lang="cpp" style="--mc:var(--c3)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">03</span>
+          <span>
+            <span class="mod-name">CMU 15-445/645 — Database Systems</span>
+            <div class="mod-sub">BusTub, in C++ · 5 projects</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">LANG=C++17</span><span class="mod-tag">BusTub</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">You build out BusTub, the CMU Database Group's teaching DBMS — buffer pool, B+Tree index, query executors, and concurrency control — ending with a real, working relational database engine you wrote yourself.</p>
+          <ol class="lab-list">
+            <li><span class="lab-n">01</span><div class="lab-body"><h4>C++ primer</h4><p>Project 0 is a copy-on-write trie built under strict rules — no raw pointers, no locks, only shared_ptr and immutability — that must hit a perfect score before you're allowed to touch BusTub itself. It exists purely to filter out "I don't actually know modern C++" before it costs you a week on Project 1.</p><div class="lab-res"><a href="https://15445.courses.cs.cmu.edu/" target="_blank">15-445/645 course site</a><a href="https://github.com/cmu-db/bustub" target="_blank">bustub on GitHub</a></div></div></li>
+            <li><span class="lab-n">02</span><div class="lab-body"><h4>Buffer pool manager</h4><p>Every database is bigger than RAM, so it needs a component that shuttles fixed-size pages between disk and an in-memory pool, tracking pinned vs. evictable pages, and picking a victim with an LRU-K policy when full. Get this wrong and every layer above it silently corrupts data.</p><div class="lab-res"><a href="https://15445.courses.cs.cmu.edu/" target="_blank">Project #1: Buffer Pool Manager</a><a href="https://db.cs.cmu.edu/" target="_blank">CMU Database Group — lectures &amp; papers</a></div></div></li>
+            <li><span class="lab-n">03</span><div class="lab-body"><h4>B+Tree index</h4><p>A disk-based, thread-safe B+Tree — the structure almost every relational database uses for indexes — with point lookups, range scans, and concurrent inserts/deletes via latch crabbing. Students routinely say this project taught them more about real data structures than an entire algorithms course.</p><div class="lab-res"><a href="https://15445.courses.cs.cmu.edu/" target="_blank">Project #2: B+Tree Index</a><a href="https://15445.courses.cs.cmu.edu/fall2025/assignments.html" target="_blank">Full assignments list</a></div></div></li>
+            <li><span class="lab-n">04</span><div class="lab-body"><h4>Query execution &amp; concurrency control</h4><p>Project 3 builds the Volcano-style iterator operators (scans, joins, aggregation, sorting) that turn a query plan into results. Project 4 makes it correct under concurrent transactions with two-phase locking or MVCC, so overlapping readers and writers can't corrupt each other's view of the data.</p><div class="lab-res"><a href="https://15445.courses.cs.cmu.edu/" target="_blank">Projects #3 &amp; #4</a><a href="https://www.youtube.com/@CMUDatabaseGroup" target="_blank">CMU Database Group on YouTube</a></div></div></li>
+          </ol>
+          <a class="module-cta" href="https://15445.courses.cs.cmu.edu/" target="_blank">open 15-445 →</a>
+        </div>
+      </div>
+
+      <!-- MODULE 04 — 15-418 / CS149 -->
+      <div class="module" id="mod-04" data-lang="gpu" style="--mc:var(--c4)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">04</span>
+          <span>
+            <span class="mod-name">CMU 15-418/618 &amp; Stanford CS149 — Parallel Computing</span>
+            <div class="mod-sub">C++, ISPC, CUDA, OpenMP/MPI · 4–5 assignments</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">CUDA</span><span class="mod-tag">ISPC</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">Two sibling courses (same lineage, taught at CMU and Stanford) that take you from a single multicore machine to a GPU to a cluster of machines — the performance layer underneath everything in tiers 01–03 and 05.</p>
+          <ol class="lab-list">
+            <li><span class="lab-n">01</span><div class="lab-body"><h4>Multicore &amp; SIMD</h4><p>You parallelize small programs (a Mandelbrot renderer, a sqrt approximator) first with ISPC, which compiles to SIMD instructions across your cores, then with raw threads — graded partly on a speedup analysis, not just correct output. The fastest way to build intuition for why "more cores" isn't automatically "more speed."</p><div class="lab-tags"><span class="lab-tag">TOOL=<span class="k">ispc</span></span><span class="lab-tag">LAW=<span class="k">amdahl</span></span></div><div class="lab-res"><a href="https://cs149.stanford.edu/" target="_blank">Stanford CS149 course site</a><a href="https://github.com/stanford-cs149" target="_blank">stanford-cs149 starter code</a></div></div></li>
+            <li><span class="lab-n">02</span><div class="lab-body"><h4>Parallel task scheduler</h4><p>You build a task execution library from scratch in C++ — the same category of system as a game engine's thread pool — implementing scheduling policies for task graphs with dependencies, and measuring how overhead and load balancing trade off as task sizes shrink.</p><div class="lab-res"><a href="https://cs149.stanford.edu/" target="_blank">Task scheduler assignment handout</a></div></div></li>
+            <li><span class="lab-n">03</span><div class="lab-body"><h4>GPU programming</h4><p>A parallel renderer in CUDA — circles composited onto a canvas — that forces you to understand thread blocks, warps, shared memory, and memory coalescing, because a naive version is both wrong and slow at once. Most people's first real contact with how a GPU schedules work, underneath the CUDA/PyTorch abstractions used daily in ML.</p><div class="lab-tags"><span class="lab-tag">UNIT=<span class="k">warp</span></span></div><div class="lab-res"><a href="https://cs149.stanford.edu/" target="_blank">CUDA renderer assignment handout</a><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank">NVIDIA CUDA Programming Guide</a></div></div></li>
+            <li><span class="lab-n">04</span><div class="lab-body"><h4>Large-scale parallel workloads</h4><p>Graph algorithms like PageRank or BFS, parallelized first with OpenMP on one machine, then with MPI across machines that share nothing and must communicate by message-passing. A deliberate bridge — the programming model here is exactly what tier 05's distributed systems course is built on.</p><div class="lab-res"><a href="https://cs149.stanford.edu/" target="_blank">Graph processing assignment handout</a><a href="https://csd.cmu.edu/course-profiles/15-418-Parallel-Computer-Architecture-and-Programming" target="_blank">CMU 15-418/618 course profile</a></div></div></li>
+          </ol>
+          <a class="module-cta" href="https://cs149.stanford.edu/" target="_blank">open CS149 →</a>
+        </div>
+      </div>
+
+      <!-- MODULE 05 — MIT 6.5840 -->
+      <div class="module" id="mod-05" data-lang="go" style="--mc:var(--c5)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">05</span>
+          <span>
+            <span class="mod-name">MIT 6.5840 — Distributed Systems</span>
+            <div class="mod-sub">fka 6.824 · in Go · 5 labs</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">LANG=Go</span><span class="mod-tag">Raft</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">The course this whole page bends toward: MapReduce, then Raft consensus, then a fault-tolerant and finally a sharded key-value store — where OS-level failure handling, network RPC, and database-level correctness under concurrency all get composed into one problem.</p>
+          <ol class="lab-list">
+            <li><span class="lab-n">01</span><div class="lab-body"><h4>MapReduce</h4><p>Implement a MapReduce coordinator and worker pool from the original Google paper: the coordinator hands out map/reduce tasks over RPC, and — the actual point of the lab — has to notice when a worker dies mid-task and re-assign it without corrupting output. The gentlest introduction to "things fail, and your system has to keep working anyway."</p><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.824/" target="_blank">6.5840 course site</a><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf" target="_blank">MapReduce — the OSDI '04 paper</a></div></div></li>
+            <li><span class="lab-n">02</span><div class="lab-body"><h4>Raft consensus</h4><p>The heart of the course: implement Raft, the consensus algorithm behind etcd, CockroachDB, and Consul — leader election, log replication via AppendEntries, persistence, and log compaction via snapshots. Tests inject network partitions, dropped RPCs, and crashes at every stage; famously the hardest lab.</p><div class="lab-tags"><span class="lab-tag">DIFFICULTY=<span class="k">high</span></span></div><div class="lab-res"><a href="https://raft.github.io/raft.pdf" target="_blank">In Search of an Understandable Consensus Algorithm</a><a href="http://thesecretlivesofdata.com/raft/" target="_blank">The Secret Lives of Data — Raft, visualized</a></div></div></li>
+            <li><span class="lab-n">03</span><div class="lab-body"><h4>Fault-tolerant KV store</h4><p>A key/value service on top of Raft: clients send Put/Append/Get to whichever server they believe is leader, the service submits each op to Raft and only applies it once committed on a majority. You also handle duplicate client retries without double-applying — where "distributed systems are hard" becomes a specific bug you're chasing.</p><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.824/" target="_blank">Lab 4: Fault-tolerant KV Service</a></div></div></li>
+            <li><span class="lab-n">04</span><div class="lab-body"><h4>Sharded KV service</h4><p>Split the keyspace across independent Raft groups coordinated by a shard controller that can move ownership between groups while the system stays live — without ever losing a write or serving stale data mid-handoff. Essentially how CockroachDB or DynamoDB scale writes horizontally.</p><div class="lab-res"><a href="https://pdos.csail.mit.edu/6.824/schedule.html" target="_blank">Lab 5 &amp; required paper readings</a></div></div></li>
+          </ol>
+          <a class="module-cta" href="https://pdos.csail.mit.edu/6.824/" target="_blank">open 6.5840 →</a>
+        </div>
+      </div>
+
+      <div class="elective-divider">electives — once 01–05 aren't enough</div>
+
+      <!-- ELECTIVE — Berkeley CS186 -->
+      <div class="module" id="mod-06" data-lang="elective" style="--mc:var(--c6)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">e1</span>
+          <span>
+            <span class="mod-name">Berkeley CS186 — Database Systems</span>
+            <div class="mod-sub">a second, different DB build · SimpleDB</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">SimpleDB</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">Berkeley's database course, structurally close to 15-445 but its own codebase and its own opinions on teaching storage, indexing, query optimization, transactions, and recovery — worth doing after 15-445 specifically because a second implementation of the same ideas in a different codebase is what makes the concepts (not just "how BusTub happens to do it") actually stick.</p>
+          <a class="module-cta" href="https://cs186berkeley.net/" target="_blank">open CS186 →</a>
+        </div>
+      </div>
+
+      <!-- ELECTIVE — UW CSE 452 -->
+      <div class="module" data-lang="elective java" style="--mc:var(--c6)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">e2</span>
+          <span>
+            <span class="mod-name">UW CSE 452 — Distributed Systems</span>
+            <div class="mod-sub">another take on 6.5840's core idea · Java</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">LANG=Java</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">A distributed systems course whose main project — a highly-available, fault-tolerant, transactional key-value store, built in Java over several team labs — was explicitly designed as a sibling to MIT's 6.824/6.5840 project. Same core problem, different language, different framing of the same consensus-and-replication ideas from module 05.</p>
+          <a class="module-cta" href="https://courses.cs.washington.edu/courses/cse452/" target="_blank">open CSE 452 →</a>
+        </div>
+      </div>
+
+      <!-- ELECTIVE — Brown CS 1380 -->
+      <div class="module" data-lang="elective" style="--mc:var(--c6)">
+        <button class="module-head" onclick="toggleModule(this)">
+          <span class="mod-index">e3</span>
+          <span>
+            <span class="mod-name">Brown CS 1380 — Distributed Systems</span>
+            <div class="mod-sub">build a distributed store, differently · milestones M0–M6</div>
+          </span>
+          <span class="mod-tags"><span class="mod-tag">M0–M6</span></span>
+          <span class="mod-chevron">+</span>
+        </button>
+        <div class="module-body">
+          <p class="module-intro">Brown's distributed systems course builds up a distributed computing framework across seven milestones — centralized computing, serialization, actors &amp; RPC, node groups &amp; gossip, distributed storage, distributed processing, and cloud deployment — ending at the same destination as 6.5840 (a working distributed store you built) reached through a very different, more incremental path.</p>
+          <a class="module-cta" href="https://cs.brown.edu/courses/csci1380/" target="_blank">open CS1380 →</a>
+        </div>
+      </div>
+
     </div>
+  </section>
 
-    <div class="connector"><span class="ok">[ OK ]</span> 02/06 network-stack linked → next: 03_databases</div>
-
-    <!-- TIER 3 — CMU 15-445 -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--c3)">03</div>
-        <div class="tier-title"><span class="prompt">$</span>cat 03_databases/README<span class="tier-sub">CMU 15-445/645 — Database Systems · BusTub, in C++</span></div>
-        <div class="tier-count">5 projects</div>
-      </div>
-      <div class="cards">
-
-        <div class="card t3" onclick="toggle(this,'p-t3a')">
-          <div class="card-num">03.01</div>
-          <div class="card-title">C++ primer</div>
-          <div class="card-sub">trie · RAII · smart pointers</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t3" onclick="toggle(this,'p-t3b')">
-          <div class="card-num">03.02</div>
-          <div class="card-title">Buffer pool manager</div>
-          <div class="card-sub">disk ↔ memory · LRU-K eviction</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t3" onclick="toggle(this,'p-t3c')">
-          <div class="card-num">03.03</div>
-          <div class="card-title">B+Tree index</div>
-          <div class="card-sub">range scans · concurrent latching</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t3" onclick="toggle(this,'p-t3d')">
-          <div class="card-num">03.04</div>
-          <div class="card-title">Query execution &amp; concurrency</div>
-          <div class="card-sub">operators, joins · 2PL / MVCC</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-      </div>
-      <div class="panel" id="p-t3a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c3)">03.01 — c++ primer</div><div class="panel-name">C++ Primer</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Project 0 is a copy-on-write trie built with a strict set of C++ rules — no raw pointers, no locks, only shared_ptr and immutability — that must be completed with a perfect score before you're allowed to touch BusTub itself, the teaching relational database the CMU Database Group built specifically for this course. It exists purely to filter out "I don't actually know modern C++" before it costs you a week on Project 1.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp17</span></span><span class="pstat">GATE=<span class="k">100%</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://15445.courses.cs.cmu.edu/" target="_blank"><span class="res-arr">→</span>15-445/645 course site — always the current offering</a></li><li><a href="https://github.com/cmu-db/bustub" target="_blank"><span class="res-arr">→</span>bustub — the DBMS you'll be building out, on GitHub</a></li></ul></div></div></div>
-      <div class="panel" id="p-t3b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c3)">03.02 — buffer pool manager</div><div class="panel-name">Buffer Pool Manager</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Every database is bigger than RAM, so it needs a component that shuttles fixed-size pages between disk and an in-memory pool, tracks which pages are pinned (in use) vs. evictable, and picks a victim to evict using an LRU-K replacement policy when the pool is full. Get this wrong and every layer built on top of it — the index, the query executor — silently corrupts data or deadlocks, which is exactly why it's project 1.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp17</span></span><span class="pstat">POLICY=<span class="k">lru-k</span></span><span class="pstat">THREAD=<span class="k">safe</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://15445.courses.cs.cmu.edu/" target="_blank"><span class="res-arr">→</span>15-445/645 — Project #1: Buffer Pool Manager</a></li><li><a href="https://db.cs.cmu.edu/" target="_blank"><span class="res-arr">→</span>CMU Database Group — lectures, papers, seminar recordings</a></li></ul></div></div></div>
-      <div class="panel" id="p-t3c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c3)">03.03 — b+tree index</div><div class="panel-name">B+Tree Index</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You implement a disk-based, thread-safe B+Tree — the structure almost every relational database uses for its indexes — supporting point lookups, range scans via leaf-node linked lists, and concurrent inserts/deletes using latch crabbing so multiple threads can safely walk and modify the tree at once. It's the project most students say taught them more about real data structures than an entire algorithms course did.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp17</span></span><span class="pstat">LOCK=<span class="k">crabbing</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://15445.courses.cs.cmu.edu/" target="_blank"><span class="res-arr">→</span>15-445/645 — Project #2: B+Tree Index</a></li><li><a href="https://15445.courses.cs.cmu.edu/fall2025/assignments.html" target="_blank"><span class="res-arr">→</span>Full assignments list, current semester</a></li></ul></div></div></div>
-      <div class="panel" id="p-t3d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c3)">03.04 — query execution &amp; concurrency control</div><div class="panel-name">Execution &amp; Concurrency</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Project 3 has you build the Volcano-style iterator operators (sequential scan, joins, aggregation, sorting) that turn a query plan into actual results, one tuple at a time. Project 4 then makes it correct under concurrent transactions — implementing two-phase locking or multi-version concurrency control so overlapping readers and writers can't corrupt each other's view of the data. Finish both and you have a real, working relational database engine you wrote yourself.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp17</span></span><span class="pstat">MODE=<span class="k">2pl|mvcc</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://15445.courses.cs.cmu.edu/" target="_blank"><span class="res-arr">→</span>15-445/645 — Projects #3 &amp; #4</a></li><li><a href="https://www.youtube.com/@CMUDatabaseGroup" target="_blank"><span class="res-arr">→</span>CMU Database Group on YouTube — full lecture playlists</a></li></ul></div></div></div>
+  <section class="section" style="border-bottom:none">
+    <div class="section-head">
+      <span class="sh-tag">synthesis</span>
+      <h2>How the tracks actually connect</h2>
     </div>
-
-    <div class="connector"><span class="ok">[ OK ]</span> 03/06 storage-engine linked → next: 04_parallel_gpu</div>
-
-    <!-- TIER 4 — CMU 15-418 / Stanford CS149 -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--c4)">04</div>
-        <div class="tier-title"><span class="prompt">$</span>cat 04_parallel_gpu/README<span class="tier-sub">CMU 15-418/618 &amp; Stanford CS149 — Parallel Computing · C++, ISPC, CUDA, OpenMP/MPI</span></div>
-        <div class="tier-count">4–5 assignments</div>
+    <div class="synth">
+      <div class="synth-box">
+        <div class="synth-eyebrow">one fast, correct machine</div>
+        <div class="synth-title">Modules 01–04</div>
+        <p class="synth-desc">OS (how a single machine runs code) → Networking (how machines talk) → Databases (how to store and query data reliably) → Parallel/GPU (how to make all of the above fast on modern hardware). Each is a self-contained systems course you can do in any order once you have C/C++ and a Linux terminal.</p>
       </div>
-      <div class="cards">
-
-        <div class="card t4" onclick="toggle(this,'p-t4a')">
-          <div class="card-num">04.01</div>
-          <div class="card-title">Multicore &amp; SIMD</div>
-          <div class="card-sub">ISPC · threads · speedup analysis</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t4" onclick="toggle(this,'p-t4b')">
-          <div class="card-num">04.02</div>
-          <div class="card-title">Parallel task scheduler</div>
-          <div class="card-sub">thread pool · work stealing, from scratch</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t4" onclick="toggle(this,'p-t4c')">
-          <div class="card-num">04.03</div>
-          <div class="card-title">GPU programming</div>
-          <div class="card-sub">CUDA renderer · memory hierarchy</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t4" onclick="toggle(this,'p-t4d')">
-          <div class="card-num">04.04</div>
-          <div class="card-title">Large-scale parallel workloads</div>
-          <div class="card-sub">graph algorithms · OpenMP / MPI</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-      </div>
-      <div class="panel" id="p-t4a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c4)">04.01 — multicore &amp; simd</div><div class="panel-name">Multicore &amp; SIMD</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Assignment 1 starts you on a single machine: you parallelize small programs (a Mandelbrot renderer, a sqrt approximator) first with ISPC, which compiles a single-program description down to SIMD instructions across the cores you have, then with raw threads — and you're graded partly on producing a speedup analysis, not just correct output. It's the fastest way to build real intuition for why "more cores" doesn't automatically mean "more speed."</p><div class="panel-stats"><span class="pstat">TOOL=<span class="k">ispc</span></span><span class="pstat">TOOL=<span class="k">pthreads</span></span><span class="pstat">LAW=<span class="k">amdahl</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs149.stanford.edu/" target="_blank"><span class="res-arr">→</span>Stanford CS149 — course site, current offering</a></li><li><a href="https://csd.cmu.edu/course-profiles/15-418-Parallel-Computer-Architecture-and-Programming" target="_blank"><span class="res-arr">→</span>CMU 15-418/618 — course profile (search for the latest semester site)</a></li><li><a href="https://github.com/stanford-cs149" target="_blank"><span class="res-arr">→</span>stanford-cs149 on GitHub — public assignment starter code</a></li></ul></div></div></div>
-      <div class="panel" id="p-t4b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c4)">04.02 — parallel task scheduler</div><div class="panel-name">Task Scheduler</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You build a task execution library from scratch in C++ — the same category of system as a thread pool inside a game engine or a build system — implementing several increasingly sophisticated scheduling policies for task graphs with dependencies, and measuring how scheduling overhead and load balancing trade off against each other as task sizes shrink. This is where "parallel programming" stops being about calling a library and starts being about building one.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">cpp</span></span><span class="pstat">MODEL=<span class="k">task-graph</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs149.stanford.edu/" target="_blank"><span class="res-arr">→</span>CS149 — task scheduler assignment handout</a></li><li><a href="https://github.com/stanford-cs149" target="_blank"><span class="res-arr">→</span>stanford-cs149 — starter code repositories</a></li></ul></div></div></div>
-      <div class="panel" id="p-t4c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c4)">04.03 — gpu programming</div><div class="panel-name">GPU Programming</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">You write a parallel renderer in CUDA — circles composited onto a canvas — which sounds like graphics but is really a forcing function to understand thread blocks, warps, shared memory, and memory coalescing, because a naive implementation is both wrong (race conditions on overlapping pixels) and slow (uncoalesced global memory access) at the same time. This is most people's first real contact with how a GPU actually schedules and moves data, underneath the CUDA/PyTorch abstractions used daily in ML.</p><div class="panel-stats"><span class="pstat">TOOL=<span class="k">cuda</span></span><span class="pstat">UNIT=<span class="k">warp</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs149.stanford.edu/" target="_blank"><span class="res-arr">→</span>CS149 — CUDA renderer assignment handout</a></li><li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank"><span class="res-arr">→</span>NVIDIA CUDA C++ Programming Guide</a></li></ul></div></div></div>
-      <div class="panel" id="p-t4d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c4)">04.04 — large-scale parallel workloads</div><div class="panel-name">Large-Scale Workloads</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">The final assignment moves to distributed-memory parallelism: graph algorithms like PageRank or BFS parallelized first with OpenMP on one machine, then with MPI across multiple machines that share nothing and must communicate explicitly by message-passing. It's a deliberate bridge — the programming model here (independent nodes, explicit messages, no shared state) is exactly what tier 05's distributed systems course is built on.</p><div class="panel-stats"><span class="pstat">TOOL=<span class="k">openmp</span></span><span class="pstat">TOOL=<span class="k">mpi</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs149.stanford.edu/" target="_blank"><span class="res-arr">→</span>CS149 — graph processing assignment handout</a></li><li><a href="https://csd.cmu.edu/course-profiles/15-418-Parallel-Computer-Architecture-and-Programming" target="_blank"><span class="res-arr">→</span>CMU 15-418/618 course profile</a></li></ul></div></div></div>
-    </div>
-
-    <div class="connector"><span class="ok">[ OK ]</span> 04/06 parallel-runtime linked → next: 05_distributed</div>
-
-    <!-- TIER 5 — MIT 6.5840 -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--c5)">05</div>
-        <div class="tier-title"><span class="prompt">$</span>cat 05_distributed/README<span class="tier-sub">MIT 6.5840 — Distributed Systems (fka 6.824) · in Go</span></div>
-        <div class="tier-count">5 labs</div>
-      </div>
-      <div class="cards">
-
-        <div class="card t5" onclick="toggle(this,'p-t5a')">
-          <div class="card-num">05.01</div>
-          <div class="card-title">MapReduce</div>
-          <div class="card-sub">distributed batch processing</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t5" onclick="toggle(this,'p-t5b')">
-          <div class="card-num">05.02</div>
-          <div class="card-title">Raft consensus</div>
-          <div class="card-sub">leader election · log replication</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t5" onclick="toggle(this,'p-t5c')">
-          <div class="card-num">05.03</div>
-          <div class="card-title">Fault-tolerant KV store</div>
-          <div class="card-sub">linearizability on top of Raft</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t5" onclick="toggle(this,'p-t5d')">
-          <div class="card-num">05.04</div>
-          <div class="card-title">Sharded KV service</div>
-          <div class="card-sub">dynamic reconfiguration · shard migration</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-      </div>
-      <div class="panel" id="p-t5a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c5)">05.01 — mapreduce</div><div class="panel-name">MapReduce</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Lab 1 has you implement a MapReduce coordinator and worker pool from the original Google paper: the coordinator hands out map and reduce tasks over RPC, workers process them and write intermediate files, and — the actual point of the lab — the coordinator has to notice when a worker dies mid-task and re-assign that task without corrupting output. It's the gentlest possible introduction to the core distributed-systems problem: things fail, and your system has to keep working anyway.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">go</span></span><span class="pstat">RPC=<span class="k">net/rpc</span></span><span class="pstat">FAIL=<span class="k">worker-crash</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.824/" target="_blank"><span class="res-arr">→</span>6.5840 course site — schedule, labs, papers</a></li><li><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf" target="_blank"><span class="res-arr">→</span>MapReduce — the original OSDI '04 paper</a></li></ul></div></div></div>
-      <div class="panel" id="p-t5b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c5)">05.02 — raft consensus</div><div class="panel-name">Raft Consensus</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Lab 3 is the heart of the course: implement Raft, the consensus algorithm behind etcd, CockroachDB, and Consul, across three stages — leader election with randomized timeouts, log replication with the AppendEntries protocol, and persistence plus log compaction via snapshots so a restarted server can recover state without replaying its entire history. Tests inject network partitions, dropped RPCs, and server crashes at every stage, so "it passes on my laptop" and "it's actually correct" are very different bars here.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">go</span></span><span class="pstat">DIFFICULTY=<span class="k">high</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://raft.github.io/raft.pdf" target="_blank"><span class="res-arr">→</span>In Search of an Understandable Consensus Algorithm — the Raft paper</a></li><li><a href="http://thesecretlivesofdata.com/raft/" target="_blank"><span class="res-arr">→</span>The Secret Lives of Data — Raft, visualized interactively</a></li><li><a href="https://pdos.csail.mit.edu/6.824/" target="_blank"><span class="res-arr">→</span>6.5840 — Lab 3: Raft handout</a></li></ul></div></div></div>
-      <div class="panel" id="p-t5c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c5)">05.03 — fault-tolerant kv store</div><div class="panel-name">Fault-Tolerant KV</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">With Raft working, Lab 4 puts a key/value service on top of it: clients send Put/Append/Get RPCs to whichever server they believe is leader, the service submits each operation to Raft, and only applies it — and replies to the client — once Raft confirms it's committed on a majority of replicas. You also have to handle duplicate client requests from retries without applying them twice, which is where "distributed systems are hard" stops being an abstraction and starts being a specific bug you're chasing.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">go</span></span><span class="pstat">CONSISTENCY=<span class="k">linearizable</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.824/" target="_blank"><span class="res-arr">→</span>6.5840 — Lab 4: Fault-tolerant Key/Value Service</a></li><li><a href="https://pdos.csail.mit.edu/6.5840/project.html" target="_blank"><span class="res-arr">→</span>6.5840 — optional final project ideas</a></li></ul></div></div></div>
-      <div class="panel" id="p-t5d"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c5)">05.04 — sharded kv service</div><div class="panel-name">Sharded KV Service</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">The final lab splits the keyspace across multiple independent Raft groups, each owning a subset of shards, coordinated by a separate shard controller that can move shard ownership between groups while the system stays live. The hard part isn't sharding itself — it's migrating a shard from one Raft group to another without ever losing a write or serving a request against stale data during the handoff, which is essentially how real systems like CockroachDB or DynamoDB scale writes horizontally.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">go</span></span><span class="pstat">TOPOLOGY=<span class="k">multi-raft</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://pdos.csail.mit.edu/6.824/" target="_blank"><span class="res-arr">→</span>6.5840 — Lab 5: Sharded Key/Value Service</a></li><li><a href="https://pdos.csail.mit.edu/6.824/schedule.html" target="_blank"><span class="res-arr">→</span>6.5840 — schedule and required paper readings</a></li></ul></div></div></div>
-    </div>
-
-    <div class="connector"><span class="ok">[ OK ]</span> 05/06 consensus-layer linked → next: 06_more_reps</div>
-
-    <!-- TIER 6 — More in this genre -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--c6)">06</div>
-        <div class="tier-title"><span class="prompt">$</span>cat 06_more_reps/README<span class="tier-sub">once tiers 01–05 aren't enough</span></div>
-        <div class="tier-count">3 courses</div>
-      </div>
-      <div class="cards-3">
-
-        <div class="card t6" onclick="toggle(this,'p-t6a')">
-          <div class="card-num">06.01</div>
-          <div class="card-title">Berkeley CS186</div>
-          <div class="card-sub">Database Systems · a second, different DB build</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t6" onclick="toggle(this,'p-t6b')">
-          <div class="card-num">06.02</div>
-          <div class="card-title">UW CSE 452</div>
-          <div class="card-sub">Distributed Systems · another take on 6.5840's core idea</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-        <div class="card t6" onclick="toggle(this,'p-t6c')">
-          <div class="card-num">06.03</div>
-          <div class="card-title">Brown CS 1380</div>
-          <div class="card-sub">Distributed Systems · build a distributed store, differently</div>
-          <div class="card-arrow">run</div>
-        </div>
-
-      </div>
-      <div class="panel" id="p-t6a"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c6)">06.01 — berkeley cs186</div><div class="panel-name">Berkeley CS186</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Berkeley's database course, structurally close to 15-445 but its own codebase (SimpleDB) and its own opinions on how to teach storage, indexing, query optimization, transactions, and recovery — worth doing after 15-445 specifically because a second implementation of the same ideas in a different codebase is what makes the concepts (not just "how BusTub happens to do it") actually stick.</p><div class="panel-stats"><span class="pstat">DB=<span class="k">simpledb</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs186berkeley.net/" target="_blank"><span class="res-arr">→</span>CS186 course site — notes, syllabus, past offerings</a></li></ul></div></div></div>
-      <div class="panel" id="p-t6b"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c6)">06.02 — uw cse 452</div><div class="panel-name">UW CSE 452</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">A distributed systems course whose main project — a highly-available, fault-tolerant, transactional key-value store, built in Java over several team labs — was explicitly designed as a sibling to MIT's 6.824/6.5840 project. Same core problem, different language, different framing of the same consensus-and-replication ideas from tier 05.</p><div class="panel-stats"><span class="pstat">LANG=<span class="k">java</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://courses.cs.washington.edu/courses/cse452/" target="_blank"><span class="res-arr">→</span>CSE 452 course site — recent offerings and lab handouts</a></li></ul></div></div></div>
-      <div class="panel" id="p-t6c"><div class="panel-inner"><div class="panel-left"><div class="panel-label" style="color:var(--c6)">06.03 — brown cs 1380</div><div class="panel-name">Brown CS 1380</div><div class="panel-desc-label">DESCRIPTION</div><p class="panel-text">Brown's distributed systems course builds up a distributed computing framework across seven milestones — centralized computing, serialization, actors &amp; RPC, node groups &amp; gossip, distributed storage, distributed processing, and cloud deployment — ending with the same destination as 6.5840 (a working distributed store you built) reached through a very different, more incremental path.</p><div class="panel-stats"><span class="pstat">MILESTONES=<span class="k">m0-m6</span></span></div></div><div class="panel-right"><div class="res-heading"></div><ul class="res-list"><li><a href="https://cs.brown.edu/courses/csci1380/" target="_blank"><span class="res-arr">→</span>CS1380/1385/2380 course site</a></li><li><a href="https://github.com/brown-cs1380" target="_blank"><span class="res-arr">→</span>brown-cs1380 on GitHub — course organization</a></li></ul></div></div></div>
-    </div>
-
-    <div class="connector"><span class="wait">[ .. ]</span> 06/06 complete → compiling summary...</div>
-
-    <!-- DESTINATION -->
-    <div class="tier">
-      <div class="tier-header">
-        <div class="tier-num" style="color:var(--dim)">$</div>
-        <div class="tier-title"><span class="prompt">$</span>tree systems-track --depth=1<span class="tier-sub">how the tiers actually connect</span></div>
-        <div class="tier-count">2 threads</div>
-      </div>
-      <div class="destination">
-        <div class="cs-card">
-          <div class="cs-bg-num">01</div>
-          <div class="cs-eyebrow">one fast, correct machine</div>
-          <div class="cs-title">Tiers 01–04</div>
-          <div class="cs-desc">OS (how a single machine runs code) → Networking (how machines talk) → Databases (how to store and query data reliably) → Parallel/GPU (how to make all of the above fast on modern hardware). Each one is a self-contained systems course you can do in any order once you have C/C++ and a Linux terminal.</div>
-        </div>
-        <div class="cs-card">
-          <div class="cs-bg-num">02</div>
-          <div class="cs-eyebrow">many machines, one system</div>
-          <div class="cs-title">Tier 05 — and beyond</div>
-          <div class="cs-desc">6.5840 is where OS-level failure handling, network-level RPC, and database-level correctness under concurrency all get composed into one problem: keep a service correct when the machines running it can crash, and the network can drop, delay, or reorder messages at any time. Tier 06 is just more reps at that same problem, in different languages and codebases.</div>
-        </div>
+      <div class="synth-arrow">→</div>
+      <div class="synth-box">
+        <div class="synth-eyebrow">many machines, one system</div>
+        <div class="synth-title">Module 05 — and beyond</div>
+        <p class="synth-desc">6.5840 composes OS-level failure handling, network-level RPC, and database-level correctness under concurrency into one problem: keep a service correct when machines crash and the network drops, delays, or reorders messages at any time. The electives are just more reps at that same problem.</p>
       </div>
     </div>
-
-  </div><!-- end .content -->
-</main>
+  </section>
+</div>
 
 <footer>
-  <div class="footer-left">
-    <div><span class="prompt">$</span> <span class="fg">echo $STATUS</span></div>
-    <div>all labs public · free · self-gradable — <span class="fg">no enrollment required</span></div>
-    <div>no sponsors · no affiliate links · share freely<span class="cursor"></span></div>
+  <div class="wrap footer-inner">
+    <div class="footer-left">
+      <div><span class="prompt">$</span> <span class="fg">echo $STATUS</span></div>
+      <div>all labs public · free · self-gradable — <span class="fg">no enrollment required</span></div>
+      <div>no sponsors · no affiliate links · share freely<span class="cursor"></span></div>
+    </div>
+    <div class="footer-right">exit 0</div>
   </div>
-  <div class="footer-right">exit 0</div>
 </footer>
 
 <script>
-function toggle(card, panelId) {
-  const panel = document.getElementById(panelId);
-  const wasOpen = card.classList.contains('open');
-  document.querySelectorAll('.card.open').forEach(c => c.classList.remove('open'));
-  document.querySelectorAll('.panel.show').forEach(p => p.classList.remove('show'));
-  if (!wasOpen) {
-    card.classList.add('open');
-    panel.classList.add('show');
-    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
-  }
+function toggleModule(btn) {
+  btn.parentElement.classList.toggle('open');
 }
 
-window.addEventListener('scroll', () => {
-  const d = document.documentElement;
-  const pct = d.scrollTop / (d.scrollHeight - d.clientHeight);
-  document.getElementById('progress').style.width = Math.round(pct * 100) + '%';
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const filter = chip.dataset.filter;
+    document.querySelectorAll('.module').forEach(mod => {
+      if (mod.dataset.lang === 'elective' || mod.dataset.lang.includes('elective')) return;
+      const show = filter === 'all' || mod.dataset.lang.includes(filter);
+      mod.classList.toggle('hide', !show);
+    });
+  });
 });
 </script>
 </body>
