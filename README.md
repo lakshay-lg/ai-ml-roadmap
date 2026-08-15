@@ -12,6 +12,7 @@ A growing collection of self-study tools, curated by **signal-to-time ratio** �
 /                    ← Hub: links to all tools
 /roadmap/            ← AI/ML Odyssey (course roadmap + progress tracker)
 /ml-prereqs/         ← ML Prerequisites study map
+/cs-fundamentals/    ← CS Fundamentals study map (systems courses)
 ```
 
 ---
@@ -43,11 +44,20 @@ Each topic links to the best free resources available.
 
 ---
 
+### [CS Fundamentals](https://roadmap.lakshay.systems/cs-fundamentals/)
+A roadmap for building the systems you use every day, from scratch — instead of just using them as black boxes.
+
+**Covers:** MIT 6.1810 (xv6 OS) · Stanford CS144 (build TCP) · CMU 15-445 (BusTub database) · CMU 15-418/Stanford CS149 (parallel & GPU computing) · MIT 6.5840 (MapReduce, Raft, distributed KV stores)  
+**Also links:** Berkeley CS186, UW CSE 452, and Brown CS1380 as further reps in the same genre  
+Every lab is public, free, and self-gradable — no enrollment required.
+
+---
+
 ## Tech Stack
 
 - **React 18** (via CDN) — AI/ML Odyssey
 - **Babel Standalone** — inline JSX, no build step
-- **Vanilla HTML/CSS/JS** — ML Prerequisites
+- **Vanilla HTML/CSS/JS** — ML Prerequisites, CS Fundamentals
 - **CSS custom properties** — theming
 - **localStorage** — progress persistence
 - **GitHub Pages** — hosting
